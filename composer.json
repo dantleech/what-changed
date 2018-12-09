@@ -17,7 +17,8 @@
         "phpunit/phpunit": "^7.5",
         "phpstan/phpstan": "^0.10.6",
         "friendsofphp/php-cs-fixer": "^2.13",
-        "phpactor/test-utils": "^1.0"
+        "phpactor/test-utils": "^1.0",
+        "composer/composer": "^1.8"
     },
     "autoload": {
         "psr-4": {

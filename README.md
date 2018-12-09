@@ -18,6 +18,7 @@ calls the Github API to get the _commit messages_ for the differences between an
 
 - Only packages hosted on Github are supported.
 - Lock files are archived forever (or until you delete them from `vendor/composer/archive`).
+- Downgrades are not detected (as with `monolog/monolog` in the console dump below).
 
 ```bash
 $ composer what-changed
