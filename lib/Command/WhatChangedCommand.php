@@ -8,11 +8,14 @@ use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
 
 class WhatChangedCommand extends BaseCommand
 {
+    const OPTION_LIMIT = 'limit';
+
     /**
      * @var PackageHistories
      */
@@ -23,7 +26,10 @@ class WhatChangedCommand extends BaseCommand
      */
     private $factory;
 
-    public function __construct(PackageHistories $histories, ChangelogFactory $factory)
+    public function __construct(
+        PackageHistories $histories,
+        ChangelogFactory $factory
+    )
     {
         parent::__construct();
         $this->histories = $histories;
@@ -33,12 +39,19 @@ class WhatChangedCommand extends BaseCommand
     protected function configure()
     {
         $this->setName('what-changed');
+        $this->setDescription('Show what changed since your last update');
+        $this->addOption(self::OPTION_LIMIT, null, InputOption::VALUE_REQUIRED, 'Number of composer lock files to compare', 2);
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $changed = $this->histories->tail((int) $input->getOption(self::OPTION_LIMIT));
+        $output->write(sprintf('Showing changes from %s lock files', $changed->count()));
+        $changed = $changed->changed();
+        $output->writeln(sprintf(', %d lock files have changed', $changed->count()));
+
         /** @var PackageHistory $history */
-        foreach ($this->histories->changed() as $history) {
+        foreach ($changed as $history) {
             $output->writeln(sprintf('<info>%s</>', $history->name()));
             $output->writeln(str_repeat('=', strlen($history->name())));
             $output->write(PHP_EOL);

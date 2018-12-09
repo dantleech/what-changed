@@ -30,11 +30,11 @@ class PackageHistories implements IteratorAggregate, Countable
         return new ArrayIterator($this->histories);
     }
 
-    public function changed()
+    public function changed(): self
     {
-        return array_filter($this->histories, function (PackageHistory $history) {
+        return new self(array_filter($this->histories, function (PackageHistory $history) {
             return $history->hasChanged();
-        });
+        }));
     }
 
     /**
@@ -43,5 +43,10 @@ class PackageHistories implements IteratorAggregate, Countable
     public function count()
     {
         return count($this->histories);
+    }
+
+    public function tail(int $limit): self
+    {
+        return new self(array_slice($this->histories, -$limit));
     }
 }
