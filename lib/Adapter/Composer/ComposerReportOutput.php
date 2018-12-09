@@ -25,7 +25,7 @@ class ComposerReportOutput implements ReportOutput
     public function writeln(?string $output = null): void
     {
         if (null === $output) {
-            $this->output->write(PHP_EOL);
+            $this->output->write('');
             return;
         }
         $this->output->write($output);

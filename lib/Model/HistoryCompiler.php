@@ -41,16 +41,23 @@ class HistoryCompiler
                     continue;
                 }
 
+                $isNew = false;
                 if (!isset($packageHistories[$package['name']])) {
                     $packageHistories[$package['name']] = new PackageHistory(
                         $package['name'],
                         $source['type'],
                         $source['url']
                     );
+                    $isNew = true;
                 }
+
 
                 /** @var PackageHistory $packageHistory */
                 $packageHistory = $packageHistories[$package['name']];
+
+                if ($isNew && $index > 0) {
+                    $packageHistory->markAsNew();
+                }
 
                 $packageHistory->addReference($source['reference']);
             }

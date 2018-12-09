@@ -50,34 +50,29 @@ class ConsoleReport implements Report
             return;
         }
 
-        $output->writeln();
-
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
             if ($history->isNew()) {
-                $output->writeln(sprintf('[NEW] <info>%s</>', $history->name()));
+                $output->writeln(sprintf('  [NEW] <info>%s</>', $history->name()));
                 continue;
             }
             $output->writeln(sprintf(
-                '[UPD] <info>%s</> %s..%s',
+                '  [UPD] <info>%s</> %s..%s',
                 $history->name(),
                 substr($history->first(), 0, 10),
                 substr($history->last(), 0, 10)
             ));
-
-            $output->writeln();
 
             /** @var Change $change */
             foreach ($this->factory->changeLogFor(
                 $history
             ) as $change) {
                 $output->writeln(sprintf(
-                    '  [<comment>%s</>] %s',
+                    '    [<comment>%s</>] %s',
                     $change->date()->format('Y-m-d H:i:s'),
                     $this->formatMessage($change->message())
                 ));
             }
-            $output->writeln();
         }
     }
 

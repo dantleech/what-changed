@@ -47,7 +47,6 @@ class LockFiles implements IteratorAggregate
             });
             $files = $this->sort($files);
             $files = array_slice($files, -$this->limit);
-            var_dump($files);
         }
 
 
