@@ -1,5 +1,5 @@
 /vendor/
 /composer.lock
-/.php_cs.cache
 /tests/Workspace
+/.php_cs.cache
 

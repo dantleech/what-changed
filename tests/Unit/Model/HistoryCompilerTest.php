@@ -202,6 +202,45 @@ class HistoryCompilerTest extends TestCase
         $this->assertTrue($histories->at(0)->hasChanged());
     }
 
+    public function testDetectsReAddedPackages()
+    {
+        $compiler = $this->createCompiler($this->createLock([
+            [
+                'packages' => [
+                    [
+                        'name' => 'hello',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '1234',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+            [
+                'packages' => [
+                    [
+                    ]
+                ],
+            ],
+            [
+                'packages' => [
+                    [
+                        'name' => 'hello',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '456',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+        ]));
+        $histories = $compiler->compile();
+        $this->assertCount(1, $histories);
+        $this->assertTrue($histories->at(0)->isNew());
+    }
+
     private function createCompiler(LockFiles $lockFiles): HistoryCompiler
     {
         return new HistoryCompiler($lockFiles, $this->filter->reveal());

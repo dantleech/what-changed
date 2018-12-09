@@ -41,9 +41,8 @@ class ConsoleReport implements Report
     ): void {
         $changed = $this->histories->changed();
         $output->writeln(sprintf(
-            '<info>dantleech/what-changed:</> %s changed (comparing last %s lock files)',
-            $changed->count(),
-            $this->histories->count()
+            '<info>dantleech/what-changed:</> %s changed',
+            $changed->count()
         ));
 
         if ($changed->count() === 0) {
@@ -52,6 +51,7 @@ class ConsoleReport implements Report
 
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
+
             if ($history->isNew()) {
                 $output->writeln(sprintf('  [ADD] <info>%s</>', $history->name()));
                 continue;
@@ -61,6 +61,7 @@ class ConsoleReport implements Report
                 $output->writeln(sprintf('  [REM] <info>%s</>', $history->name()));
                 continue;
             }
+
             $output->writeln(sprintf(
                 '  [UPD] <info>%s</> %s..%s',
                 $history->name(),

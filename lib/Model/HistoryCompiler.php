@@ -28,9 +28,9 @@ class HistoryCompiler
         $packageHistories = [];
 
         foreach ($this->files as $index => $file) {
+            $lockPackageNames = [];
             $lock = $this->loadFile($file);
 
-            $lockPackageNames = [];
             foreach ($lock['packages'] as $package) {
                 if (!$this->filter->isValid($package)) {
                     continue;
@@ -60,7 +60,7 @@ class HistoryCompiler
 
                 // if this is the first time the package has been seen (and
                 // this is not the first iteration) then it has been added.
-                if ($isNew && $index > 0) {
+                if (($isNew || $packageHistory->isRemoved()) && $index > 0) {
                     $packageHistory->markAsNew();
                 }
 
