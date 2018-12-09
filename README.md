@@ -3,7 +3,9 @@ What Changed?
 
 [![Build Status](https://travis-ci.org/dantleech/what-changed.svg?branch=master)](https://travis-ci.org/dantleech/what-changed)
 
-Generates change reports when you update composer.
+![What Changed?](https://user-images.githubusercontent.com/530801/49700600-d3d10a00-fbd8-11e8-8235-cf3dbb026f32.png)
+
+Generates change reports when you update [Composer](https://getcomposer.org).
 
 This plugin _archives_ your lock files, when you update it compares the new file with the previous one and then
 calls the Github API to get the _commit messages_ for the differences between any upgraded packages.
@@ -15,7 +17,7 @@ calls the Github API to get the _commit messages_ for the differences between an
 **Current limitations / features**:
 
 - Only packages hosted on Github are supported.
-- Lock files are archived until they are manually delelted (in `vendor/composer/archive`).
+- Lock files are archived forever (or until you delete them from `vendor/composer/archive`).
 
 ```bash
 $ composer what-changed
