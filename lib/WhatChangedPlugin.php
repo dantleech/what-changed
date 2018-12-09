@@ -21,6 +21,16 @@ use DTL\WhatChanged\Model\PackageHistories;
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
     /**
+     * @var WhatChangedContainer
+     */
+    private $container;
+
+    public function __construct()
+    {
+        $this->container = new WhatChangedContainer();
+    }
+
+    /**
      * {@inheritDoc}
      */
     public function activate(Composer $composer, IOInterface $io)
@@ -39,7 +49,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     public function handlePreUpdate(Event $event)
     {
-        $this->archiver()->archive();
+        $this->container->archiver()->archive();
     }
 
     /**
@@ -55,22 +65,10 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     public function getCommands()
     {
         return [
-            new WhatChangedCommand($this->histories(), $this->changelogFactory()),
+            new WhatChangedCommand(
+                $this->container->histories(),
+                $this->container->changelogFactory()
+            ),
         ];
-    }
-
-    private function histories(): PackageHistories
-    {
-        return (new HistoryCompiler(new LockFiles($this->archiver()->archivePath(), getcwd())))->compile();
-    }
-
-    private function changelogFactory(): ChangelogFactory
-    {
-        return new GithubChangelogFactory($this->archiver()->archivePath());
-    }
-
-    private function archiver(): ComposerLockArchiver
-    {
-        return new ComposerLockArchiver(getcwd());
     }
 }
