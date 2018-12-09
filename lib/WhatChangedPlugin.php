@@ -11,7 +11,6 @@ use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use DTL\WhatChanged\Adapter\Composer\ComposerReportOutput;
-use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
 use DTL\WhatChanged\Command\WhatChangedCommand;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider

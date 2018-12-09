@@ -32,7 +32,6 @@ class HistoryCompiler
 
             $lockPackageNames = [];
             foreach ($lock['packages'] as $package) {
-
                 if (!$this->filter->isValid($package)) {
                     continue;
                 }
@@ -71,7 +70,6 @@ class HistoryCompiler
             foreach (array_diff(array_keys($packageHistories), $lockPackageNames) as $removedPackageName) {
                 $packageHistories[$removedPackageName]->markAsRemoved();
             }
-
         }
 
         return new PackageHistories($packageHistories);

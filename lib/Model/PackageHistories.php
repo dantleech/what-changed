@@ -22,7 +22,8 @@ class PackageHistories implements IteratorAggregate, Countable
     {
         if (!isset($this->histories[$index])) {
             throw new WhatChangedRuntimeException(sprintf(
-                'Unknown index "%s"', $index
+                'Unknown index "%s"',
+                $index
             ));
         }
 

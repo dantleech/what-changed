@@ -4,8 +4,6 @@ namespace DTL\WhatChanged\Command;
 
 use Composer\Command\BaseCommand;
 use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
-use DTL\WhatChanged\Model\PackageHistories;
-use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\WhatChangedContainerFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

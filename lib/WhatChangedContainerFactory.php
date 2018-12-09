@@ -41,7 +41,8 @@ class WhatChangedContainerFactory
 
         throw new WhatChangedRuntimeException(sprintf(
             'Configuration keys "%s" are required in config with keys "%s"',
-            implode('", "', $diff), implode('", "', array_keys($config))
+            implode('", "', $diff),
+            implode('", "', array_keys($config))
         ));
     }
 }
