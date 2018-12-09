@@ -30,6 +30,7 @@ class HistoryCompiler
         foreach ($this->files as $index => $file) {
             $lock = $this->loadFile($file);
 
+            $lockPackageNames = [];
             foreach ($lock['packages'] as $package) {
 
                 if (!$this->filter->isValid($package)) {
@@ -40,12 +41,15 @@ class HistoryCompiler
                     continue;
                 }
 
+                $packageName = $package['name'];
+                $lockPackageNames[] = $packageName;
+
                 $source = $package['source'];
 
                 $isNew = false;
-                if (!isset($packageHistories[$package['name']])) {
-                    $packageHistories[$package['name']] = new PackageHistory(
-                        $package['name'],
+                if (!isset($packageHistories[$packageName])) {
+                    $packageHistories[$packageName] = new PackageHistory(
+                        $packageName,
                         $source['type'],
                         $source['url']
                     );
@@ -53,7 +57,7 @@ class HistoryCompiler
                 }
 
                 /** @var PackageHistory $packageHistory */
-                $packageHistory = $packageHistories[$package['name']];
+                $packageHistory = $packageHistories[$packageName];
 
                 // if this is the first time the package has been seen (and
                 // this is not the first iteration) then it has been added.
@@ -63,6 +67,11 @@ class HistoryCompiler
 
                 $packageHistory->addReference($source['reference']);
             }
+
+            foreach (array_diff(array_keys($packageHistories), $lockPackageNames) as $removedPackageName) {
+                $packageHistories[$removedPackageName]->markAsRemoved();
+            }
+
         }
 
         return new PackageHistories($packageHistories);

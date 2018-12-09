@@ -53,7 +53,12 @@ class ConsoleReport implements Report
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
             if ($history->isNew()) {
-                $output->writeln(sprintf('  [NEW] <info>%s</>', $history->name()));
+                $output->writeln(sprintf('  [ADD] <info>%s</>', $history->name()));
+                continue;
+            }
+
+            if ($history->isRemoved()) {
+                $output->writeln(sprintf('  [REM] <info>%s</>', $history->name()));
                 continue;
             }
             $output->writeln(sprintf(

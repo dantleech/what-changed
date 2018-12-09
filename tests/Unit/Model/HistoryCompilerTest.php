@@ -168,6 +168,40 @@ class HistoryCompilerTest extends TestCase
         $this->assertTrue($histories->at(1)->isNew());
     }
 
+    public function testDetectsRemovedPackage()
+    {
+        $compiler = $this->createCompiler($this->createLock([
+            [
+                'packages' => [
+                    [
+                        'name' => 'hello',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '1234',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+            [
+                'packages' => [
+                    [
+                        'name' => 'goodbye',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '456',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+        ]));
+        $histories = $compiler->compile();
+        $this->assertCount(2, $histories);
+        $this->assertTrue($histories->at(0)->isRemoved());
+        $this->assertTrue($histories->at(0)->hasChanged());
+    }
+
     private function createCompiler(LockFiles $lockFiles): HistoryCompiler
     {
         return new HistoryCompiler($lockFiles, $this->filter->reveal());

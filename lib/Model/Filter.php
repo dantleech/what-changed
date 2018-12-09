@@ -6,6 +6,10 @@ class Filter
 {
     public function isValid(array $package): bool
     {
+        if (!isset($package['source'])) {
+            return false;
+        }
+
         $source = $package['source'];
         // we only support git currently
         if ($source['type'] !== 'git') {

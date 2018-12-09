@@ -7,6 +7,10 @@ use RuntimeException;
 
 class PackageHistory implements Countable
 {
+    const STATE_NEW = 'new';
+    const STATE_REMOVED = 'removed';
+    const STATE_UPDATED = 'updated';
+
     /**
      * @var string
      */
@@ -32,7 +36,10 @@ class PackageHistory implements Countable
      */
     private $ordered = [];
 
-    private $isNew = false;
+    /**
+     * @var string
+     */
+    private $state = self::STATE_UPDATED;
 
     public function __construct(string $name, string $type, string $url)
     {
@@ -51,7 +58,11 @@ class PackageHistory implements Countable
 
     public function hasChanged()
     {
-        if ($this->isNew) {
+        if ($this->isNew()) {
+            return true;
+        }
+
+        if ($this->isRemoved()) {
             return true;
         }
 
@@ -102,13 +113,23 @@ class PackageHistory implements Countable
         return $this->name;
     }
 
-    public function markAsNew()
+    public function markAsNew(): void
     {
-        $this->isNew = true;
+        $this->state = self::STATE_NEW;
     }
 
-    public function isNew()
+    public function markAsRemoved(): void
     {
-        return $this->isNew;
+        $this->state = self::STATE_REMOVED;
+    }
+
+    public function isNew(): bool
+    {
+        return $this->state === self::STATE_NEW;
+    }
+
+    public function isRemoved(): bool
+    {
+        return $this->state === self::STATE_REMOVED;
     }
 }
