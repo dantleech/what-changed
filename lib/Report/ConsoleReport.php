@@ -23,21 +23,27 @@ class ConsoleReport implements Report
      */
     private $output;
 
+    /**
+     * @var PackageHistories
+     */
+    private $histories;
+
     public function __construct(
+        PackageHistories $histories,
         ChangelogFactory $factory
     ) {
         $this->factory = $factory;
+        $this->histories = $histories;
     }
 
     public function render(
-        ReportOutput $output,
-        PackageHistories $histories
+        ReportOutput $output
     ): void {
-        $changed = $histories->changed();
+        $changed = $this->histories->changed();
         $output->writeln(sprintf(
             '<info>dantleech/what-changed:</> %s changed (comparing last %s lock files)',
             $changed->count(),
-            $histories->count()
+            $this->histories->count()
         ));
 
         if ($changed->count() === 0) {

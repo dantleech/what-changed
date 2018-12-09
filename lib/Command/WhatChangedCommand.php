@@ -6,6 +6,7 @@ use Composer\Command\BaseCommand;
 use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\Report;
+use DTL\WhatChanged\WhatChangedContainerFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,22 +17,15 @@ class WhatChangedCommand extends BaseCommand
     private const OPTION_DIFF = 'diff';
 
     /**
-     * @var PackageHistories
+     * @var WhatChangedContainerFactory
      */
-    private $histories;
-
-    /**
-     * @var Report
-     */
-    private $report;
+    private $containerFactory;
 
     public function __construct(
-        PackageHistories $histories,
-        Report $report
+        WhatChangedContainerFactory $containerFactory
     ) {
         parent::__construct();
-        $this->histories = $histories;
-        $this->report = $report;
+        $this->containerFactory = $containerFactory;
     }
 
     protected function configure()
@@ -44,14 +38,8 @@ class WhatChangedCommand extends BaseCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $limit = $input->getOption('limit');
-        $histories = $this->histories->tail(
-            is_numeric($limit) ? (int) $limit : PHP_INT_MAX
-        );
-
-        $this->report->render(
-            new ConsoleReportOutput($output),
-            $histories
-        );
+        $this->containerFactory->create([
+            'limit' => $input->getOption('limit'),
+        ])->consoleReport()->render(new ConsoleReportOutput($output));
     }
 }

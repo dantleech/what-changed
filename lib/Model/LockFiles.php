@@ -21,10 +21,16 @@ class LockFiles implements IteratorAggregate
      */
     private $projectPath;
 
-    public function __construct(string $archivePath, string $projectPath)
+    /**
+     * @var int
+     */
+    private $limit;
+
+    public function __construct(string $archivePath, string $projectPath, int $limit)
     {
         $this->archivePath = $archivePath;
         $this->projectPath = $projectPath;
+        $this->limit = $limit;
     }
 
     /**
@@ -40,6 +46,8 @@ class LockFiles implements IteratorAggregate
                 return $info->isFile() && $info->getExtension() === 'lock';
             });
             $files = $this->sort($files);
+            $files = array_slice($files, -$this->limit);
+            var_dump($files);
         }
 
 

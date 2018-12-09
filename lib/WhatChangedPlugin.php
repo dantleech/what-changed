@@ -16,14 +16,11 @@ use DTL\WhatChanged\Command\WhatChangedCommand;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
-    /**
-     * @var WhatChangedContainer
-     */
-    private $container;
-
-    public function __construct()
+    public function containerFactory(): WhatChangedContainerFactory
     {
-        $this->container = new WhatChangedContainer(getcwd());
+        return new WhatChangedContainerFactory([
+            'cwd' => getcwd()
+        ]);
     }
 
     /**
@@ -46,15 +43,13 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     public function handlePreUpdate(Event $event)
     {
-        $this->container->archiver()->archive();
+        $this->containerFactory()->create()->archiver()->archive();
     }
 
     public function handlePostUpdate(Event $event)
     {
-        $histories = $this->container->histories()->tail(2);
-        $this->container->consoleReport()->render(
-            new ComposerReportOutput($event->getIO()),
-            $histories
+        $this->containerFactory()->consoleReport()->render(
+            new ComposerReportOutput($event->getIO())
         );
     }
 
@@ -72,8 +67,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     {
         return [
             new WhatChangedCommand(
-                $this->container->histories(),
-                $this->container->consoleReport()
+                $this->containerFactory()
             ),
         ];
     }

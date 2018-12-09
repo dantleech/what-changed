@@ -12,11 +12,20 @@ use DTL\WhatChanged\Report\ConsoleReport;
 
 final class WhatChangedContainer
 {
+    /**
+     * @var string
+     */
     private $cwd;
 
-    public function __construct($cwd)
+    /**
+     * @var int
+     */
+    private $limit;
+
+    public function __construct(string $cwd, int $limit)
     {
         $this->cwd = $cwd;
+        $this->limit = $limit;
     }
 
     public function histories(): PackageHistories
@@ -37,6 +46,7 @@ final class WhatChangedContainer
     public function consoleReport(): ConsoleReport
     {
         return new ConsoleReport(
+            $this->histories(),
             $this->changelogFactory()
         );
     }
@@ -45,7 +55,8 @@ final class WhatChangedContainer
     {
         return new LockFiles(
             $this->archiver()->archivePath(),
-            $this->cwd
+            $this->cwd,
+            $this->limit
         );
     }
 }
