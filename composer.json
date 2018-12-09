@@ -10,11 +10,13 @@
         }
     ],
     "require": {
-        "composer-plugin-api": "^1.1"
+        "composer-plugin-api": "^1.1",
+        "guzzlehttp/guzzle": "^6.3"
     },
     "require-dev": {
         "composer/composer": "^1.8",
-        "phpunit/phpunit": "^7.5"
+        "phpunit/phpunit": "^7.5",
+        "phpstan/phpstan": "^0.10.6"
     },
     "autoload": {
         "psr-4": {
@@ -27,6 +29,7 @@
         }
     },
     "extra": {
+        "class": "DTL\\WhatChanged\\WhatChangedPlugin",
         "branch-alias": {
             "dev-master": "1.0.x-dev"
         }

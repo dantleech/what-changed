@@ -1,0 +1,7 @@
+enabled:
+
+disabled:
+  - align_double_arrow
+  - concat_without_spaces
+  - phpdoc_indent
+  - phpdoc_params
