@@ -7,7 +7,6 @@ use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
-use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Model\ReportOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
@@ -32,8 +31,7 @@ class ConsoleReport implements Report
     public function __construct(
         PackageHistories $histories,
         ChangelogFactory $factory
-    )
-    {
+    ) {
         $this->histories = $histories;
         $this->factory = $factory;
     }
@@ -41,8 +39,7 @@ class ConsoleReport implements Report
     public function render(
         ReportOutput $output,
         PackageHistories $histories
-    ): void
-    {
+    ): void {
         $changed = $histories->changed();
         $output->writeln(sprintf(
             'Showing changes from %s lock files, %s changed',

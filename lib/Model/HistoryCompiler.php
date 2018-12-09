@@ -4,7 +4,6 @@ namespace DTL\WhatChanged\Model;
 
 use RuntimeException;
 use SplFileInfo;
-use Symfony\Component\Finder\Iterator\SortableIterator;
 
 class HistoryCompiler
 {
@@ -62,7 +61,8 @@ class HistoryCompiler
 
         if (false === $contents) {
             throw new RuntimeException(sprintf(
-                'Could not read file "%s"', $file->getPathname()
+                'Could not read file "%s"',
+                $file->getPathname()
             ));
         }
 

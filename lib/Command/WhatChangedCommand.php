@@ -4,16 +4,11 @@ namespace DTL\WhatChanged\Command;
 
 use Composer\Command\BaseCommand;
 use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
-use DTL\WhatChanged\Model\Change;
-use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
-use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
-use DTL\WhatChanged\Model\ReportOptions;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Terminal;
 
 class WhatChangedCommand extends BaseCommand
 {
@@ -33,8 +28,7 @@ class WhatChangedCommand extends BaseCommand
     public function __construct(
         PackageHistories $histories,
         Report $report
-    )
-    {
+    ) {
         parent::__construct();
         $this->histories = $histories;
         $this->report = $report;

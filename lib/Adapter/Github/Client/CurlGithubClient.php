@@ -12,7 +12,8 @@ class CurlGithubClient implements GithubClient
         $ch = curl_init($uri);
         if (false === $ch) {
             throw new GithubClientException(sprintf(
-                'Could not initialize curl for URI "%s"', $uri
+                'Could not initialize curl for URI "%s"',
+                $uri
             ));
         }
 

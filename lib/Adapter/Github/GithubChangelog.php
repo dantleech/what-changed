@@ -5,10 +5,6 @@ namespace DTL\WhatChanged\Adapter\Github;
 use DTL\WhatChanged\Model\Change;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\PackageHistory;
-use Generator;
-use GuzzleHttp\ClientInterface;
-use IteratorAggregate;
-use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
 class GithubChangelog implements Changelog
@@ -41,7 +37,8 @@ class GithubChangelog implements Changelog
 
         $url = sprintf(
             'https://api.github.com/repos/%s/%s/compare/%s...%s',
-            $org, $repo,
+            $org,
+            $repo,
             $this->history->last(),
             $this->history->first()
         );
@@ -50,7 +47,8 @@ class GithubChangelog implements Changelog
 
         if (!isset($response['commits'])) {
             throw new RuntimeException(sprintf(
-                'Unexpected response from Github: "%s"', json_encode($response, JSON_PRETTY_PRINT)
+                'Unexpected response from Github: "%s"',
+                json_encode($response, JSON_PRETTY_PRINT)
             ));
         }
 

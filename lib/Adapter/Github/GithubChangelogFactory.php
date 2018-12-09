@@ -6,7 +6,6 @@ use DTL\WhatChanged\Adapter\Github\Client\CachedGithubClient;
 use DTL\WhatChanged\Adapter\Github\Client\CurlGithubClient;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistory;
-use GuzzleHttp\Client;
 
 class GithubChangelogFactory implements ChangelogFactory
 {

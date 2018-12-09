@@ -4,13 +4,10 @@ namespace DTL\WhatChanged\Model;
 
 use ArrayIterator;
 use CallbackFilterIterator;
-use DirectoryIterator;
 use FilesystemIterator;
-use FilterIterator;
 use Iterator;
 use IteratorAggregate;
 use SplFileInfo;
-use Symfony\Component\Finder\Iterator\SortableIterator;
 
 class LockFiles implements IteratorAggregate
 {

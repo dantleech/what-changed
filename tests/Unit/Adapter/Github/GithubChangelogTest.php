@@ -4,9 +4,7 @@ namespace DTL\WhatChanged\Tests\Unit\Adapter\Github;
 
 use DTL\WhatChanged\Adapter\Github\Client\CurlGithubClient;
 use DTL\WhatChanged\Adapter\Github\GithubChangelog;
-use DTL\WhatChanged\Adapter\Github\GithubClient;
 use DTL\WhatChanged\Model\PackageHistory;
-use GuzzleHttp\Client;
 use PHPUnit\Framework\TestCase;
 
 class GithubChangelogTest extends TestCase

@@ -10,13 +10,7 @@ use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
-use DTL\WhatChanged\Adapter\Github\GithubChangelogFactory;
 use DTL\WhatChanged\Command\WhatChangedCommand;
-use DTL\WhatChanged\Model\ChangelogFactory;
-use DTL\WhatChanged\Model\ComposerLockArchiver;
-use DTL\WhatChanged\Model\HistoryCompiler;
-use DTL\WhatChanged\Model\LockFiles;
-use DTL\WhatChanged\Model\PackageHistories;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
