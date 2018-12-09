@@ -10,12 +10,13 @@
         }
     ],
     "require": {
+        "php": "^7.1",
         "composer-plugin-api": "^1.1"
     },
     "require-dev": {
-        "composer/composer": "^1.8",
         "phpunit/phpunit": "^7.5",
-        "phpstan/phpstan": "^0.10.6"
+        "phpstan/phpstan": "^0.10.6",
+        "friendsofphp/php-cs-fixer": "^2.13"
     },
     "autoload": {
         "psr-4": {
