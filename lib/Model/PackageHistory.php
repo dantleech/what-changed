@@ -32,6 +32,8 @@ class PackageHistory implements Countable
      */
     private $ordered = [];
 
+    private $isNew = false;
+
     public function __construct(string $name, string $type, string $url)
     {
         $this->name = $name;
@@ -49,6 +51,10 @@ class PackageHistory implements Countable
 
     public function hasChanged()
     {
+        if ($this->isNew) {
+            return true;
+        }
+
         return count($this->references) > 1;
     }
 
@@ -94,5 +100,15 @@ class PackageHistory implements Countable
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function markAsNew()
+    {
+        $this->isNew = true;
+    }
+
+    public function isNew()
+    {
+        return $this->isNew;
     }
 }

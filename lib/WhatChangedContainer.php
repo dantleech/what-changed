@@ -37,7 +37,6 @@ final class WhatChangedContainer
     public function consoleReport(): ConsoleReport
     {
         return new ConsoleReport(
-            $this->histories(),
             $this->changelogFactory()
         );
     }

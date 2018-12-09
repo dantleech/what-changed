@@ -21,9 +21,10 @@ class HistoryCompiler
     {
         $packageHistories = [];
 
-        foreach ($this->files as $file) {
+        foreach ($this->files as $index => $file) {
             $lock = $this->loadFile($file);
             foreach ($lock['packages'] as $package) {
+
                 if (!isset($package['source'])) {
                     continue;
                 }
@@ -40,15 +41,25 @@ class HistoryCompiler
                     continue;
                 }
 
+                $isNew = false;
                 if (!isset($packageHistories[$package['name']])) {
                     $packageHistories[$package['name']] = new PackageHistory(
                         $package['name'],
                         $source['type'],
                         $source['url']
                     );
+                    $isNew = true;
                 }
 
-                $packageHistories[$package['name']]->addReference($source['reference']);
+
+                /** @var PackageHistory $packageHistory */
+                $packageHistory = $packageHistories[$package['name']];
+
+                if ($isNew && $index > 0) {
+                    $packageHistory->markAsNew();
+                }
+
+                $packageHistory->addReference($source['reference']);
             }
         }
 

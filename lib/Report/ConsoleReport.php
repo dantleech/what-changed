@@ -14,11 +14,6 @@ use Symfony\Component\Console\Terminal;
 class ConsoleReport implements Report
 {
     /**
-     * @var PackageHistories
-     */
-    private $histories;
-
-    /**
      * @var ChangelogFactory
      */
     private $factory;
@@ -29,10 +24,8 @@ class ConsoleReport implements Report
     private $output;
 
     public function __construct(
-        PackageHistories $histories,
         ChangelogFactory $factory
     ) {
-        $this->histories = $histories;
         $this->factory = $factory;
     }
 
@@ -42,16 +35,28 @@ class ConsoleReport implements Report
     ): void {
         $changed = $histories->changed();
         $output->writeln(sprintf(
-            'Showing changes from %s lock files, %s changed',
-            $histories->count(),
-            $changed->count()
+            '<info>dantleech/what-changed:</> %s changed (comparing last %s lock files)',
+            $changed->count(),
+            $histories->count()
         ));
+
+        if ($changed->count() === 0) {
+            return;
+        }
+
         $output->writeln();
 
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
-            $output->writeln(sprintf('<info>%s</>', $history->name()));
+            if ($history->isNew()) {
+                $output->writeln(sprintf('[NEW] <info>%s</>', $history->name()));
+                $output->writeln();
+                continue;
+            }
+            $output->writeln(sprintf('[UPD] <info>%s</>', $history->name()));
             $output->writeln();
+
+
             $output->writeln(sprintf('  %s...%s', $history->first(), $history->last()));
             $output->writeln();
 

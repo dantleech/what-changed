@@ -32,14 +32,19 @@ class LockFiles implements IteratorAggregate
      */
     public function getIterator()
     {
-        $files = new FilesystemIterator($this->archivePath);
-        $files = new CallbackFilterIterator($files, function (SplFileInfo $info) {
-            return $info->isFile() && $info->getExtension() === 'lock';
-        });
-        $files = $this->sort($files);
+        $files = [];
+
+        if (file_exists($this->archivePath)) {
+            $files = new FilesystemIterator($this->archivePath);
+            $files = new CallbackFilterIterator($files, function (SplFileInfo $info) {
+                return $info->isFile() && $info->getExtension() === 'lock';
+            });
+            $files = $this->sort($files);
+        }
+
 
         if (file_exists($this->composerLockPath())) {
-            array_unshift($files, new SplFileInfo($this->composerLockPath()));
+            $files[] = new SplFileInfo($this->composerLockPath());
         }
 
         return new ArrayIterator($files);
@@ -49,7 +54,7 @@ class LockFiles implements IteratorAggregate
     {
         $files = iterator_to_array($files);
         usort($files, function (SplFileInfo $a, SplFileInfo $b) {
-            return $a->getFilename() <=> $b->getFilename();
+            return $b->getFilename() <=> $a->getFilename();
         });
 
         return $files;

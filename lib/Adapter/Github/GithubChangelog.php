@@ -39,8 +39,8 @@ class GithubChangelog implements Changelog
             'https://api.github.com/repos/%s/%s/compare/%s...%s',
             $org,
             $repo,
-            $this->history->last(),
-            $this->history->first()
+            $this->history->first(),
+            $this->history->last()
         );
 
         $response = $this->client->request($url);

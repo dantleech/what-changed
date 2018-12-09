@@ -10,6 +10,8 @@ use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use DTL\WhatChanged\Adapter\Composer\ComposerReportOutput;
+use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
 use DTL\WhatChanged\Command\WhatChangedCommand;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
@@ -38,12 +40,22 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     {
         return [
             ScriptEvents::PRE_UPDATE_CMD => ['handlePreUpdate'],
+            ScriptEvents::POST_UPDATE_CMD => ['handlePostUpdate'],
         ];
     }
 
     public function handlePreUpdate(Event $event)
     {
         $this->container->archiver()->archive();
+    }
+
+    public function handlePostUpdate(Event $event)
+    {
+        $histories = $this->container->histories()->tail(2);
+        $this->container->consoleReport()->render(
+            new ComposerReportOutput($event->getIO()),
+            $histories
+        );
     }
 
     /**
