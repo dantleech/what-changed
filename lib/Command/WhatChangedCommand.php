@@ -3,10 +3,12 @@
 namespace DTL\WhatChanged\Command;
 
 use Composer\Command\BaseCommand;
+use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
 use DTL\WhatChanged\Model\Change;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
+use DTL\WhatChanged\Model\Report;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,18 +24,18 @@ class WhatChangedCommand extends BaseCommand
     private $histories;
 
     /**
-     * @var ChangelogFactory
+     * @var Report
      */
-    private $factory;
+    private $report;
 
     public function __construct(
         PackageHistories $histories,
-        ChangelogFactory $factory
+        Report $report
     )
     {
         parent::__construct();
         $this->histories = $histories;
-        $this->factory = $factory;
+        $this->report = $report;
     }
 
     protected function configure()
@@ -45,42 +47,10 @@ class WhatChangedCommand extends BaseCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $changed = $this->histories->tail((int) $input->getOption(self::OPTION_LIMIT));
-        $output->write(sprintf('Showing changes from %s lock files', $changed->count()));
-        $changed = $changed->changed();
-        $output->writeln(sprintf(', %d lock files have changed', $changed->count()));
-
-        /** @var PackageHistory $history */
-        foreach ($changed as $history) {
-            $output->writeln(sprintf('<info>%s</>', $history->name()));
-            $output->writeln(str_repeat('=', strlen($history->name())));
-            $output->write(PHP_EOL);
-            $output->writeln(sprintf('  %s...%s', $history->first(), $history->last()));
-            $output->write(PHP_EOL);
-
-            /** @var Change $change */
-            foreach ($this->factory->changeLogFor($history) as $change) {
-                $output->write(sprintf(
-                    '  [<comment>%s</>] ',
-                    $change->date()->format('Y-m-d H:i:s')
-                ));
-                $output->write($this->formatMessage($change->message()), true, OutputInterface::OUTPUT_RAW);
-            }
-            $output->write(PHP_EOL);
-        }
-    }
-
-    private function formatMessage(string $string): string
-    {
-        $line = str_replace(["\n", "\r\n", "\r"], ' ', $string);
-
-        $terminal = new Terminal();
-        $width = $terminal->getWidth() - 30;
-
-        if (mb_strlen($line) > $width) {
-            return mb_substr($line, 0, $width - 3) . '...';
-        }
-
-        return $line;
+        $histories = $this->histories->tail((int) $input->getOption('limit'));
+        $output->writeln($this->report->render(
+            new ConsoleReportOutput($output),
+            $histories
+        ));
     }
 }

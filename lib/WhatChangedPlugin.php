@@ -67,7 +67,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
         return [
             new WhatChangedCommand(
                 $this->container->histories(),
-                $this->container->changelogFactory()
+                $this->container->consoleReport()
             ),
         ];
     }

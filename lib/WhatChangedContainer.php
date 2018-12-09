@@ -8,6 +8,7 @@ use DTL\WhatChanged\Model\ComposerLockArchiver;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use DTL\WhatChanged\Model\LockFiles;
 use DTL\WhatChanged\Model\PackageHistories;
+use DTL\WhatChanged\Report\ConsoleReport;
 
 final class WhatChangedContainer
 {
@@ -24,6 +25,14 @@ final class WhatChangedContainer
     public function archiver(): ComposerLockArchiver
     {
         return new ComposerLockArchiver(getcwd());
+    }
+
+    public function consoleReport(): ConsoleReport
+    {
+        return new ConsoleReport(
+            $this->histories(),
+            $this->changelogFactory()
+        );
     }
 
     public function lockFiles()
