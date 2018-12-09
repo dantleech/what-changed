@@ -26,6 +26,7 @@ class ConsoleReportOutput implements ReportOutput
     {
         if (null === $output) {
             $this->output->write(PHP_EOL);
+            return;
         }
         $this->output->writeln($output);
     }

@@ -15,7 +15,9 @@ class HistoryCompilerTest extends TestCase
 
     public function setUp()
     {
-        $this->compiler = new HistoryCompiler(new LockFiles(__DIR__ . '/../Example'));
+        $this->compiler = new HistoryCompiler(
+            new LockFiles(__DIR__ . '/../Example', '')
+        );
     }
 
     public function testCompile()

@@ -28,7 +28,7 @@ class CachedGithubClient implements GithubClient
         $path = sprintf('%s/%s.cache', $this->cachePath, md5($uri));
 
         if (file_exists($path)) {
-            return json_decode(file_get_contents($path), true);
+            return json_decode((string) file_get_contents($path), true);
         }
 
         $response = $this->client->request($uri);

@@ -12,6 +12,13 @@ use DTL\WhatChanged\Report\ConsoleReport;
 
 final class WhatChangedContainer
 {
+    private $cwd;
+
+    public function __construct($cwd)
+    {
+        $this->cwd = $cwd;
+    }
+
     public function histories(): PackageHistories
     {
         return (new HistoryCompiler($this->lockFiles()))->compile();
@@ -24,7 +31,7 @@ final class WhatChangedContainer
 
     public function archiver(): ComposerLockArchiver
     {
-        return new ComposerLockArchiver(getcwd());
+        return new ComposerLockArchiver($this->cwd);
     }
 
     public function consoleReport(): ConsoleReport
@@ -39,7 +46,7 @@ final class WhatChangedContainer
     {
         return new LockFiles(
             $this->archiver()->archivePath(),
-            getcwd()
+            $this->cwd
         );
     }
 }

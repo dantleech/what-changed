@@ -7,6 +7,7 @@ use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
+use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Model\ReportOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
@@ -37,7 +38,10 @@ class ConsoleReport implements Report
         $this->factory = $factory;
     }
 
-    public function render(ReportOutput $output, PackageHistories $histories): void
+    public function render(
+        ReportOutput $output,
+        PackageHistories $histories
+    ): void
     {
         $changed = $histories->changed();
         $output->writeln(sprintf(
@@ -45,17 +49,19 @@ class ConsoleReport implements Report
             $histories->count(),
             $changed->count()
         ));
+        $output->writeln();
 
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
             $output->writeln(sprintf('<info>%s</>', $history->name()));
-            $output->writeln(str_repeat('=', strlen($history->name())));
             $output->writeln();
             $output->writeln(sprintf('  %s...%s', $history->first(), $history->last()));
             $output->writeln();
 
             /** @var Change $change */
-            foreach ($this->factory->changeLogFor($history) as $change) {
+            foreach ($this->factory->changeLogFor(
+                $history
+            ) as $change) {
                 $output->writeln(sprintf(
                     '  [<comment>%s</>] %s',
                     $change->date()->format('Y-m-d H:i:s'),

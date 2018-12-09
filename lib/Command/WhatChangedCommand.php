@@ -9,6 +9,7 @@ use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
+use DTL\WhatChanged\Model\ReportOptions;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,7 +17,8 @@ use Symfony\Component\Console\Terminal;
 
 class WhatChangedCommand extends BaseCommand
 {
-    const OPTION_LIMIT = 'limit';
+    private const OPTION_LIMIT = 'limit';
+    private const OPTION_DIFF = 'diff';
 
     /**
      * @var PackageHistories
@@ -43,14 +45,19 @@ class WhatChangedCommand extends BaseCommand
         $this->setName('what-changed');
         $this->setDescription('Show what changed since your last update');
         $this->addOption(self::OPTION_LIMIT, null, InputOption::VALUE_REQUIRED, 'Number of composer lock files to compare', 2);
+        $this->addOption(self::OPTION_DIFF, null, InputOption::VALUE_NONE, 'Show git diff for each changed package');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $histories = $this->histories->tail((int) $input->getOption('limit'));
-        $output->writeln($this->report->render(
+        $limit = $input->getOption('limit');
+        $histories = $this->histories->tail(
+            is_numeric($limit) ? (int) $limit : PHP_INT_MAX
+        );
+
+        $this->report->render(
             new ConsoleReportOutput($output),
             $histories
-        ));
+        );
     }
 }

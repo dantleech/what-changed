@@ -27,7 +27,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     public function __construct()
     {
-        $this->container = new WhatChangedContainer();
+        $this->container = new WhatChangedContainer(getcwd());
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace DTL\WhatChanged\Model;
 
+use RuntimeException;
 use SplFileInfo;
 use Symfony\Component\Finder\Iterator\SortableIterator;
 
@@ -58,6 +59,13 @@ class HistoryCompiler
     private function loadFile(SplFileInfo $file): array
     {
         $contents = file_get_contents($file->getPathname());
+
+        if (false === $contents) {
+            throw new RuntimeException(sprintf(
+                'Could not read file "%s"', $file->getPathname()
+            ));
+        }
+
         return json_decode($contents, true);
     }
 }
