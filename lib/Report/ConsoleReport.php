@@ -48,10 +48,9 @@ class ConsoleReport implements Report
         if ($changed->count() === 0) {
             return;
         }
-
+        $output->writeln();
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
-
             if ($history->isNew()) {
                 $output->writeln(sprintf('  [ADD] <info>%s</>', $history->name()));
                 continue;
@@ -69,16 +68,21 @@ class ConsoleReport implements Report
                 substr($history->last(), 0, 10)
             ));
 
+            $changelog = $this->factory->changeLogFor($history);
+
             /** @var Change $change */
-            foreach ($this->factory->changeLogFor(
-                $history
-            ) as $change) {
+            foreach ($changelog as $index => $change) {
+                if ($index === 0) {
+                    $output->writeln();
+                }
+
                 $output->writeln(sprintf(
                     '    [<comment>%s</>] %s',
                     $change->date()->format('Y-m-d H:i:s'),
                     $this->formatMessage($change->message())
                 ));
             }
+            $output->writeln();
         }
     }
 

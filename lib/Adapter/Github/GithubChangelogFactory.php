@@ -4,6 +4,7 @@ namespace DTL\WhatChanged\Adapter\Github;
 
 use DTL\WhatChanged\Adapter\Github\Client\CachedGithubClient;
 use DTL\WhatChanged\Adapter\Github\Client\CurlGithubClient;
+use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistory;
 
@@ -19,7 +20,7 @@ class GithubChangelogFactory implements ChangelogFactory
         $this->cachePath = $cachePath;
     }
 
-    public function changeLogFor(PackageHistory $history)
+    public function changeLogFor(PackageHistory $history): Changelog
     {
         return new GithubChangelog($history, $this->createClient());
     }

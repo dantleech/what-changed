@@ -4,5 +4,5 @@ namespace DTL\WhatChanged\Model;
 
 interface ChangelogFactory
 {
-    public function changeLogFor(PackageHistory $history);
+    public function changeLogFor(PackageHistory $history): Changelog;
 }
