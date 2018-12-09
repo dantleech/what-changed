@@ -4,6 +4,7 @@ namespace DTL\WhatChanged\Model;
 
 use ArrayIterator;
 use Countable;
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use IteratorAggregate;
 
 class PackageHistories implements IteratorAggregate, Countable
@@ -15,6 +16,17 @@ class PackageHistories implements IteratorAggregate, Countable
         foreach ($histories as $history) {
             $this->add($history);
         }
+    }
+
+    public function at(int $index): PackageHistory
+    {
+        if (!isset($this->histories[$index])) {
+            throw new WhatChangedRuntimeException(sprintf(
+                'Unknown index "%s"', $index
+            ));
+        }
+
+        return $this->histories[$index];
     }
 
     private function add(PackageHistory $history)

@@ -1,4 +1,5 @@
-vendor/
-composer.lock
-phpunit.xml
-composer.phar
+/vendor/
+/composer.lock
+/.php_cs.cache
+/tests/Workspace
+

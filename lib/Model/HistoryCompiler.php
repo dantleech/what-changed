@@ -12,9 +12,15 @@ class HistoryCompiler
      */
     private $files;
 
-    public function __construct(LockFiles $files)
+    /**
+     * @var Filter
+     */
+    private $filter;
+
+    public function __construct(LockFiles $files, Filter $filter)
     {
         $this->files = $files;
+        $this->filter = $filter;
     }
 
     public function compile(): PackageHistories
@@ -23,23 +29,18 @@ class HistoryCompiler
 
         foreach ($this->files as $index => $file) {
             $lock = $this->loadFile($file);
+
             foreach ($lock['packages'] as $package) {
+
+                if (!$this->filter->isValid($package)) {
+                    continue;
+                }
 
                 if (!isset($package['source'])) {
                     continue;
                 }
 
                 $source = $package['source'];
-
-                // we only support git currently
-                if ($source['type'] !== 'git') {
-                    continue;
-                }
-
-                // we only support github
-                if (false === strpos($source['url'], 'https://github.com/')) {
-                    continue;
-                }
 
                 $isNew = false;
                 if (!isset($packageHistories[$package['name']])) {
@@ -51,10 +52,11 @@ class HistoryCompiler
                     $isNew = true;
                 }
 
-
                 /** @var PackageHistory $packageHistory */
                 $packageHistory = $packageHistories[$package['name']];
 
+                // if this is the first time the package has been seen (and
+                // this is not the first iteration) then it has been added.
                 if ($isNew && $index > 0) {
                     $packageHistory->markAsNew();
                 }
