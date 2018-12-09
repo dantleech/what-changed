@@ -54,7 +54,7 @@ class LockFiles implements IteratorAggregate
     {
         $files = iterator_to_array($files);
         usort($files, function (SplFileInfo $a, SplFileInfo $b) {
-            return $b->getFilename() <=> $a->getFilename();
+            return $a->getFilename() <=> $b->getFilename();
         });
 
         return $files;

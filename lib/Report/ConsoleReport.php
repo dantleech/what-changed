@@ -50,14 +50,15 @@ class ConsoleReport implements Report
         foreach ($changed as $history) {
             if ($history->isNew()) {
                 $output->writeln(sprintf('[NEW] <info>%s</>', $history->name()));
-                $output->writeln();
                 continue;
             }
-            $output->writeln(sprintf('[UPD] <info>%s</>', $history->name()));
-            $output->writeln();
+            $output->writeln(sprintf(
+                '[UPD] <info>%s</> %s..%s',
+                $history->name(),
+                substr($history->first(), 0, 10),
+                substr($history->last(), 0, 10)
+            ));
 
-
-            $output->writeln(sprintf('  %s...%s', $history->first(), $history->last()));
             $output->writeln();
 
             /** @var Change $change */
