@@ -19,7 +19,8 @@ class WhatChangedContainerFactory
     public function create(array $config = []): WhatChangedContainer
     {
         $defaults = [
-            'limit' => 2,
+            'limit' => 1,
+            'cwd' => getcwd(),
         ];
         $config = array_merge($defaults, $this->config, $config);
         $this->require($config, ['cwd']);

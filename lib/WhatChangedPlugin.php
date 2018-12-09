@@ -48,7 +48,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     public function handlePostUpdate(Event $event)
     {
-        $this->containerFactory()->consoleReport()->render(
+        $this->containerFactory()->create()->consoleReport()->render(
             new ComposerReportOutput($event->getIO())
         );
     }
