@@ -47,11 +47,11 @@ class WhatChangedCommand extends BaseCommand
 
             /** @var Change $change */
             foreach ($this->factory->changeLogFor($history) as $change) {
-                $output->writeln(sprintf(
-                    '  [<comment>%s</>] %s',
-                    $change->date()->format('Y-m-d H:i:s'),
-                    $this->formatMessage($change->message())
+                $output->write(sprintf(
+                    '  [<comment>%s</>] ',
+                    $change->date()->format('Y-m-d H:i:s')
                 ));
+                $output->write($this->formatMessage($change->message()), true, OutputInterface::OUTPUT_RAW);
             }
             $output->write(PHP_EOL);
         }
@@ -59,16 +59,13 @@ class WhatChangedCommand extends BaseCommand
 
     private function formatMessage(string $string): string
     {
-        $lines = array_filter(explode(PHP_EOL, $string));
-        if (empty($lines)) {
-            return '';
-        }
+        $line = str_replace(["\n", "\r\n", "\r"], ' ', $string);
 
-        $line = implode(' ', $lines);
         $terminal = new Terminal();
+        $width = $terminal->getWidth() - 30;
 
-        if (mb_strlen($line) > $terminal->getWidth()) {
-            return mb_substr($line, 0, $terminal->getWidth() - 3) . '...';
+        if (mb_strlen($line) > $width) {
+            return mb_substr($line, 0, $width - 3) . '...';
         }
 
         return $line;

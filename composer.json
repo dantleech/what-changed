@@ -10,8 +10,7 @@
         }
     ],
     "require": {
-        "composer-plugin-api": "^1.1",
-        "guzzlehttp/guzzle": "^6.3"
+        "composer-plugin-api": "^1.1"
     },
     "require-dev": {
         "composer/composer": "^1.8",

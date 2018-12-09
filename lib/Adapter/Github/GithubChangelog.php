@@ -23,9 +23,15 @@ class GithubChangelog implements Changelog
      */
     private $parser;
 
-    public function __construct(PackageHistory $history)
+    /**
+     * @var GithubClient
+     */
+    private $client;
+
+    public function __construct(PackageHistory $history, GithubClient $client)
     {
         $this->history = $history;
+        $this->client = $client;
         $this->parser = new GithubUrlParser();
     }
 
@@ -39,15 +45,12 @@ class GithubChangelog implements Changelog
             $this->history->last(),
             $this->history->first()
         );
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, 'Composer What Changed');
-        $rawResponse = curl_exec($ch);
-        $response = $this->decodeResponse($rawResponse);
+
+        $response = $this->client->request($url);
 
         if (!isset($response['commits'])) {
             throw new RuntimeException(sprintf(
-                'Unexpected response from Github: "%s"', $rawResponse
+                'Unexpected response from Github: "%s"', json_encode($response, JSON_PRETTY_PRINT)
             ));
         }
 
@@ -57,12 +60,5 @@ class GithubChangelog implements Changelog
                 $commit['commit']['message']
             );
         }
-    }
-
-    private function decodeResponse(string $response)
-    {
-        $data = json_decode($response, true);
-
-        return $data;
     }
 }

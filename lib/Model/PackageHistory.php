@@ -41,8 +41,10 @@ class PackageHistory implements Countable
 
     public function addReference(string $reference)
     {
+        if (!isset($this->references[$reference])) {
+            $this->ordered[] = $reference;
+        }
         $this->references[$reference] = $reference;
-        $this->ordered[] = $reference;
     }
 
     public function hasChanged()

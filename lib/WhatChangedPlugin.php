@@ -66,7 +66,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     private function changelogFactory(): ChangelogFactory
     {
-        return new GithubChangelogFactory();
+        return new GithubChangelogFactory($this->archiver()->archivePath());
     }
 
     private function archiver(): ComposerLockArchiver

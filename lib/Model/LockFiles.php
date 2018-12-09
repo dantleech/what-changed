@@ -37,7 +37,7 @@ class LockFiles implements IteratorAggregate
     {
         $files = new FilesystemIterator($this->archivePath);
         $files = new CallbackFilterIterator($files, function (SplFileInfo $info) {
-            return $info->isFile();
+            return $info->isFile() && $info->getExtension() === 'lock';
         });
         $files = $this->sort($files);
 
