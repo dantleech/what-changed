@@ -1,6 +1,6 @@
 <?php
 
-namespace DTL\WhatChanged\Tests\Unit\Adapter\Github;
+namespace DTL\WhatChanged\Tests\Integration\Adapter\Github;
 
 use DTL\WhatChanged\Adapter\Github\Client\CurlGithubClient;
 use DTL\WhatChanged\Adapter\Github\GithubChangelog;

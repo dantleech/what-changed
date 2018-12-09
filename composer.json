@@ -11,6 +11,9 @@
     ],
     "require": {
         "php": "^7.1",
+		"ext-curl": "*",
+		"ext-json": "*",
+		"ext-mbstring": "*",
         "composer-plugin-api": "^1.1"
     },
     "require-dev": {
