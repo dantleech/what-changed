@@ -29,7 +29,7 @@ class WhatChangedContainerFactory
         return new WhatChangedContainer(
             $config['cwd'],
             $config['limit'],
-            $config['archive_path'],
+            $config['archive_path']
         );
     }
 
