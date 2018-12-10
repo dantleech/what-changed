@@ -12,6 +12,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use DTL\WhatChanged\Adapter\Composer\ComposerReportOutput;
 use DTL\WhatChanged\Command\WhatChangedCommand;
+use DTL\WhatChanged\Model\ReportOptions;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
@@ -48,7 +49,8 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     public function handlePostUpdate(Event $event)
     {
         $this->containerFactory()->create()->consoleReport()->render(
-            new ComposerReportOutput($event->getIO())
+            new ComposerReportOutput($event->getIO()),
+            new ReportOptions()
         );
     }
 
