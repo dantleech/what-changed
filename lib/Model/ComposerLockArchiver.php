@@ -43,7 +43,7 @@ class ComposerLockArchiver
         throw new CouldNotArchiveComposerLock(sprintf(
             'Could not archive composer lock file from "%s" to "%s"',
             $lockFilePath,
-            $archivePath
+            $this->archivePath
         ));
     }
 

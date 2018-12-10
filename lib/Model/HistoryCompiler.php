@@ -93,7 +93,8 @@ class HistoryCompiler
         if (null === $decoded) {
             throw new RuntimeException(sprintf(
                 'Could not decode JSON file "%s": %s',
-                $file->getFilename(), json_last_error_msg()
+                $file->getFilename(),
+                json_last_error_msg()
             ));
         }
 

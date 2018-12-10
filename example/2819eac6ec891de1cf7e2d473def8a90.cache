@@ -1,0 +1,171 @@
+{
+    "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/compare\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a...f0252a5ab6b4a293fb25f218d9c64386f272280f",
+    "html_url": "https:\/\/github.com\/phpstan\/phpstan\/compare\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a...f0252a5ab6b4a293fb25f218d9c64386f272280f",
+    "permalink_url": "https:\/\/github.com\/phpstan\/phpstan\/compare\/phpstan:184261d...phpstan:f0252a5",
+    "diff_url": "https:\/\/github.com\/phpstan\/phpstan\/compare\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a...f0252a5ab6b4a293fb25f218d9c64386f272280f.diff",
+    "patch_url": "https:\/\/github.com\/phpstan\/phpstan\/compare\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a...f0252a5ab6b4a293fb25f218d9c64386f272280f.patch",
+    "base_commit": {
+        "sha": "184261d80bfb21bd7b55c31e3fc5e2b94dd5616a",
+        "node_id": "MDY6Q29tbWl0NDkwMTQ3OTU6MTg0MjYxZDgwYmZiMjFiZDdiNTVjMzFlM2ZjNWUyYjk0ZGQ1NjE2YQ==",
+        "commit": {
+            "author": {
+                "name": "Alex Deleyn",
+                "email": "alex.deleyn@marlon.be",
+                "date": "2018-12-09T11:50:33Z"
+            },
+            "committer": {
+                "name": "Ond\u0159ej Mirtes",
+                "email": "ondrej@mirtes.cz",
+                "date": "2018-12-09T12:33:33Z"
+            },
+            "message": "Fix for #1607.",
+            "tree": {
+                "sha": "04494e7160bc10bd9394c7018ea64f256453f283",
+                "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/git\/trees\/04494e7160bc10bd9394c7018ea64f256453f283"
+            },
+            "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/git\/commits\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a",
+            "comment_count": 0,
+            "verification": {
+                "verified": false,
+                "reason": "unsigned",
+                "signature": null,
+                "payload": null
+            }
+        },
+        "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a",
+        "html_url": "https:\/\/github.com\/phpstan\/phpstan\/commit\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a",
+        "comments_url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/184261d80bfb21bd7b55c31e3fc5e2b94dd5616a\/comments",
+        "author": {
+            "login": "rainbow-alex",
+            "id": 613752,
+            "node_id": "MDQ6VXNlcjYxMzc1Mg==",
+            "avatar_url": "https:\/\/avatars1.githubusercontent.com\/u\/613752?v=4",
+            "gravatar_id": "",
+            "url": "https:\/\/api.github.com\/users\/rainbow-alex",
+            "html_url": "https:\/\/github.com\/rainbow-alex",
+            "followers_url": "https:\/\/api.github.com\/users\/rainbow-alex\/followers",
+            "following_url": "https:\/\/api.github.com\/users\/rainbow-alex\/following{\/other_user}",
+            "gists_url": "https:\/\/api.github.com\/users\/rainbow-alex\/gists{\/gist_id}",
+            "starred_url": "https:\/\/api.github.com\/users\/rainbow-alex\/starred{\/owner}{\/repo}",
+            "subscriptions_url": "https:\/\/api.github.com\/users\/rainbow-alex\/subscriptions",
+            "organizations_url": "https:\/\/api.github.com\/users\/rainbow-alex\/orgs",
+            "repos_url": "https:\/\/api.github.com\/users\/rainbow-alex\/repos",
+            "events_url": "https:\/\/api.github.com\/users\/rainbow-alex\/events{\/privacy}",
+            "received_events_url": "https:\/\/api.github.com\/users\/rainbow-alex\/received_events",
+            "type": "User",
+            "site_admin": false
+        },
+        "committer": {
+            "login": "ondrejmirtes",
+            "id": 104888,
+            "node_id": "MDQ6VXNlcjEwNDg4OA==",
+            "avatar_url": "https:\/\/avatars0.githubusercontent.com\/u\/104888?v=4",
+            "gravatar_id": "",
+            "url": "https:\/\/api.github.com\/users\/ondrejmirtes",
+            "html_url": "https:\/\/github.com\/ondrejmirtes",
+            "followers_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/followers",
+            "following_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/following{\/other_user}",
+            "gists_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/gists{\/gist_id}",
+            "starred_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/starred{\/owner}{\/repo}",
+            "subscriptions_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/subscriptions",
+            "organizations_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/orgs",
+            "repos_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/repos",
+            "events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/events{\/privacy}",
+            "received_events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/received_events",
+            "type": "User",
+            "site_admin": false
+        },
+        "parents": [
+            {
+                "sha": "978f829fe5b2db9b01b4d94389bd85c8c13ec28c",
+                "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/978f829fe5b2db9b01b4d94389bd85c8c13ec28c",
+                "html_url": "https:\/\/github.com\/phpstan\/phpstan\/commit\/978f829fe5b2db9b01b4d94389bd85c8c13ec28c"
+            }
+        ]
+    },
+    "merge_base_commit": {
+        "sha": "f0252a5ab6b4a293fb25f218d9c64386f272280f",
+        "node_id": "MDY6Q29tbWl0NDkwMTQ3OTU6ZjAyNTJhNWFiNmI0YTI5M2ZiMjVmMjE4ZDljNjQzODZmMjcyMjgwZg==",
+        "commit": {
+            "author": {
+                "name": "Ondrej Mirtes",
+                "email": "ondrej@mirtes.cz",
+                "date": "2018-12-03T23:21:12Z"
+            },
+            "committer": {
+                "name": "Ondrej Mirtes",
+                "email": "ondrej@mirtes.cz",
+                "date": "2018-12-04T07:28:04Z"
+            },
+            "message": "Support for array_key_first\/array_key_last",
+            "tree": {
+                "sha": "bc135b24f6f82d89df98efb5257c0b251a15a6a9",
+                "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/git\/trees\/bc135b24f6f82d89df98efb5257c0b251a15a6a9"
+            },
+            "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/git\/commits\/f0252a5ab6b4a293fb25f218d9c64386f272280f",
+            "comment_count": 0,
+            "verification": {
+                "verified": true,
+                "reason": "valid",
+                "signature": "-----BEGIN PGP SIGNATURE-----\n\niQEzBAABCAAdFiEEGasfuJ71iMlu8KALjnMLolgj2LUFAlwGLIQACgkQjnMLolgj\n2LXPVQf+KAfvxj4CWqJeeyG0V5Pehw8fnDAoMU2sLFKd3MUXEyJE+wVLSVAv3urb\nZkjtx4dCa+wudQnNNNMxf\/J0\/h7LGKM3VznVYfUZH6GGZ2otapY4fMyMFyu9xeqQ\nTm6r6qd5+fNfsF2Xu8j5mIpbq2fVHayWysXQJa5zB7JcM5un0qY6+uZrJBeSeo42\nYCQFAasqeVN\/KyBtoOUqrrkv7maGyg+8pLW5UeHG3NUZdCswGlL\/Vmbo\/2cKu5su\nxbG1stMJvcdo78EDKpmmlvCBR2Nq3Vv3egPLPuk03ieBG570a6YwjIcP8kkKFKcQ\nLV4AIdpg2ypwbfkFHdx0mxh6dGI4rw==\n=5boP\n-----END PGP SIGNATURE-----",
+                "payload": "tree bc135b24f6f82d89df98efb5257c0b251a15a6a9\nparent d98c7ca1cb6255f4ea05982d18b8b4c03f989abf\nauthor Ondrej Mirtes <ondrej@mirtes.cz> 1543879272 +0100\ncommitter Ondrej Mirtes <ondrej@mirtes.cz> 1543908484 +0100\n\nSupport for array_key_first\/array_key_last\n"
+            }
+        },
+        "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/f0252a5ab6b4a293fb25f218d9c64386f272280f",
+        "html_url": "https:\/\/github.com\/phpstan\/phpstan\/commit\/f0252a5ab6b4a293fb25f218d9c64386f272280f",
+        "comments_url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/f0252a5ab6b4a293fb25f218d9c64386f272280f\/comments",
+        "author": {
+            "login": "ondrejmirtes",
+            "id": 104888,
+            "node_id": "MDQ6VXNlcjEwNDg4OA==",
+            "avatar_url": "https:\/\/avatars0.githubusercontent.com\/u\/104888?v=4",
+            "gravatar_id": "",
+            "url": "https:\/\/api.github.com\/users\/ondrejmirtes",
+            "html_url": "https:\/\/github.com\/ondrejmirtes",
+            "followers_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/followers",
+            "following_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/following{\/other_user}",
+            "gists_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/gists{\/gist_id}",
+            "starred_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/starred{\/owner}{\/repo}",
+            "subscriptions_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/subscriptions",
+            "organizations_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/orgs",
+            "repos_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/repos",
+            "events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/events{\/privacy}",
+            "received_events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/received_events",
+            "type": "User",
+            "site_admin": false
+        },
+        "committer": {
+            "login": "ondrejmirtes",
+            "id": 104888,
+            "node_id": "MDQ6VXNlcjEwNDg4OA==",
+            "avatar_url": "https:\/\/avatars0.githubusercontent.com\/u\/104888?v=4",
+            "gravatar_id": "",
+            "url": "https:\/\/api.github.com\/users\/ondrejmirtes",
+            "html_url": "https:\/\/github.com\/ondrejmirtes",
+            "followers_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/followers",
+            "following_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/following{\/other_user}",
+            "gists_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/gists{\/gist_id}",
+            "starred_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/starred{\/owner}{\/repo}",
+            "subscriptions_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/subscriptions",
+            "organizations_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/orgs",
+            "repos_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/repos",
+            "events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/events{\/privacy}",
+            "received_events_url": "https:\/\/api.github.com\/users\/ondrejmirtes\/received_events",
+            "type": "User",
+            "site_admin": false
+        },
+        "parents": [
+            {
+                "sha": "d98c7ca1cb6255f4ea05982d18b8b4c03f989abf",
+                "url": "https:\/\/api.github.com\/repos\/phpstan\/phpstan\/commits\/d98c7ca1cb6255f4ea05982d18b8b4c03f989abf",
+                "html_url": "https:\/\/github.com\/phpstan\/phpstan\/commit\/d98c7ca1cb6255f4ea05982d18b8b4c03f989abf"
+            }
+        ]
+    },
+    "status": "behind",
+    "ahead_by": 0,
+    "behind_by": 131,
+    "total_commits": 0,
+    "commits": [],
+    "files": []
+}

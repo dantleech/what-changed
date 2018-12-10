@@ -42,56 +42,9 @@ class ConsoleReport implements Report
         ReportOptions $options
     ): void {
         $changed = $this->histories->changed();
-        $output->writeln(sprintf(
-            '<info>dantleech/what-changed:</> %s changed',
-            $changed->count()
-        ));
-
-        if ($changed->count() === 0) {
-            return;
-        }
-
-        $output->writeln();
-        /** @var PackageHistory $history */
-        foreach ($changed as $history) {
-            if ($history->isNew()) {
-                $output->writeln(sprintf('  [ADD] <info>%s</>', $history->name()));
-                continue;
-            }
-
-            if ($history->isRemoved()) {
-                $output->writeln(sprintf('  [REM] <info>%s</>', $history->name()));
-                continue;
-            }
-
-            $output->writeln(sprintf(
-                '  [UPD] <info>%s</> %s..%s',
-                $history->name(),
-                substr($history->first(), 0, 10),
-                substr($history->last(), 0, 10)
-            ));
-
-            $changelog = $this->factory->changeLogFor($history);
-
-            $index = 0;
-            /** @var Change $change */
-            foreach ($changelog as $index => $change) {
-                if (false === $options->showMergeCommits && $change->isMerge()) {
-                    continue;
-                }
-
-                if ($index++ === 0) {
-                    $output->writeln();
-                }
-
-                $output->writeln(sprintf(
-                    '    [<comment>%s</>] %s',
-                    $change->date()->format('Y-m-d H:i:s'),
-                    $this->formatMessage($change->message())
-                ));
-            }
-            $output->writeln();
-        }
+        $this->whatRemoved($output, $changed, $options);
+        $this->whatNew($output, $changed, $options);
+        $this->whatUpdated($output, $changed, $options);
     }
 
     private function formatMessage(string $string): string
@@ -106,5 +59,92 @@ class ConsoleReport implements Report
         }
 
         return $line;
+    }
+
+    private function whatNew(ReportOutput $output, PackageHistories $changed, ReportOptions $options)
+    {
+        if ($changed->new()->count() === 0) {
+            return;
+        }
+
+        $output->writeln(sprintf(
+            '<info>dantleech/what-changed:</> %s new',
+            $changed->new()->count()
+        ));
+
+        /** @var PackageHistory $history */
+        foreach ($changed->new() as $history) {
+            $output->writeln(sprintf(
+                '  - %s',
+                $history->name()
+            ));
+        }
+        $output->writeln();
+    }
+
+    private function whatRemoved(ReportOutput $output, PackageHistories $changed, ReportOptions $options)
+    {
+        if ($changed->removed()->count() === 0) {
+            return;
+        }
+
+        $output->writeln(sprintf(
+            '<info>dantleech/what-changed:</> %s removed',
+            $changed->removed()->count()
+        ));
+
+        /** @var PackageHistory $history */
+        foreach ($changed->removed() as $history) {
+            $output->writeln(sprintf(
+                '  - %s',
+                $history->name()
+            ));
+        }
+        $output->writeln();
+    }
+
+    private function whatUpdated(ReportOutput $output, PackageHistories $changed, ReportOptions $options)
+    {
+        if ($changed->updated()->count() === 0) {
+            return;
+        }
+        
+        $output->writeln(sprintf(
+            '<info>dantleech/what-changed:</> %s updated',
+            $changed->updated()->count()
+        ));
+        
+        $output->writeln();
+        
+        /** @var PackageHistory $history */
+        foreach ($changed->updated() as $history) {
+            $output->writeln(sprintf(
+                '  <info>%s</> %s..%s',
+                $history->name(),
+                substr($history->first(), 0, 10),
+                substr($history->last(), 0, 10)
+            ));
+        
+            $changelog = $this->factory->changeLogFor($history);
+        
+            $index = 0;
+            /** @var Change $change */
+            foreach ($changelog as $index => $change) {
+                if (false === $options->showMergeCommits && $change->isMerge()) {
+                    continue;
+                }
+        
+                if ($index++ === 0) {
+                    $output->writeln();
+                }
+        
+                $output->writeln(sprintf(
+                    '    [<comment>%s</>] %s',
+                    $change->date()->format('Y-m-d H:i:s'),
+                    $this->formatMessage($change->message())
+                ));
+            }
+            $output->writeln();
+        }
     }
 }
