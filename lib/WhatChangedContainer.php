@@ -26,8 +26,7 @@ final class WhatChangedContainer
     public function __construct(
         string $cwd,
         int $limit
-    )
-    {
+    ) {
         $this->cwd = $cwd;
         $this->limit = $limit;
     }
