@@ -239,6 +239,41 @@ class HistoryCompilerTest extends TestCase
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
         $this->assertTrue($histories->at(0)->isNew());
+
+    }
+
+	public function testDetectsUpgradeInDevPackage()
+    {
+        $compiler = $this->createCompiler($this->createLock([
+            [
+                'packages-dev' => [
+                    [
+                        'name' => 'goodbye',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '1234',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+            [
+                'packages-dev' => [
+                    [
+                        'name' => 'goodbye',
+                        'source' => [
+                            'type' => 'git',
+                            'reference' => '456',
+                            'url' => 'foo'
+                        ],
+                    ]
+                ],
+            ],
+        ]));
+        $histories = $compiler->compile();
+        $this->assertCount(1, $histories);
+        $this->assertTrue($histories->at(0)->hasChanged());
+        $this->assertFalse($histories->at(0)->isNew());
     }
 
     private function createCompiler(LockFiles $lockFiles): HistoryCompiler

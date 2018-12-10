@@ -31,7 +31,9 @@ class HistoryCompiler
             $lockPackageNames = [];
             $lock = $this->loadFile($file);
 
-            foreach ($lock['packages'] as $package) {
+            $packages = $this->packagesFromLock($lock);
+
+            foreach ($packages as $package) {
                 if (!$this->filter->isValid($package)) {
                     continue;
                 }
@@ -87,5 +89,20 @@ class HistoryCompiler
         }
 
         return json_decode($contents, true);
+    }
+
+    private function packagesFromLock(array $lock): array
+    {
+        $packages = [];
+            
+        if (isset($lock['packages'])) {
+            $packages = array_merge($packages, $lock['packages']);
+        }
+        
+        if (isset($lock['packages-dev'])) {
+            $packages = array_merge($packages, $lock['packages-dev']);
+        }
+
+        return $packages;
     }
 }
