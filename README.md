@@ -18,39 +18,45 @@ calls the Github API to get the _commit messages_ for the differences between an
 
 - Only packages hosted on Github are supported.
 - Lock files are archived forever (or until you delete them from `vendor/composer/archive`).
-- Downgrades are not detected (as with `monolog/monolog` in the console dump below).
 
 ```bash
-$ composer what-changed
-dantleech/what-changed: 19 changed
+$ composer update
 
-  [UPD] composer/composer 6ed7215fed..4301c19ce3
+#... composer upates ...#
 
+dantleech/what-changed: 1 removed
+  - acme/removed
+
+dantleech/what-changed: 2 new
+  - theseer/tokenizer
+  - webmozart/assert
+
+dantleech/what-changed: 2 updated
+
+  composer/composer b89daf5322..d8aef3af86
+
+    [2018-10-14 14:19:08] composer/composer#7159: make the remove command to a regex lookup on package name  - if you have multiple vendor modules installed you should be able to do composer remove vendor/*...
+    [2018-11-26 19:09:26] Fix pattern matching for remove wildcard, refs #7715
+    [2018-11-27 11:22:32] Update dependencies
+    [2018-11-27 13:26:03] Add support for imagemagick <3.3, refs #7762
+    [2018-11-27 15:27:01] Fix support for imagemagick <3.3, refs #7762
+    [2018-11-28 07:44:45] Prepare 1.8.0 changelog
+    [2018-11-29 14:25:01] Update xdebug-handler, fixes #7807
     [2018-12-03 09:21:52] Prepare 1.8.0
-    [2018-12-03 09:39:36] Update target for master
+    [2018-12-03 09:31:16] Release 1.8.0
 
-  [UPD] jetbrains/phpstorm-stubs 693fe4c896..88e48ed150
+  phpstan/phpstan c896a1a367..f0252a5ab6
 
-    [2018-12-06 12:04:32] Fix typo in MongoDB\Driver\WriteConcern::getJournal
-    [2018-12-07 14:44:26] Merge pull request #463 from alcaeus/fix-mongodb-writeconcern-typo  Fix typo in MongoDB\Driver\WriteConcern::getJournal
-
-  [UPD] monolog/monolog a335f6f1a5..fd8c787753
-
-  [UPD] phpactor/completion f5963d8b18..89fa8c6258
-
-    [2018-12-03 22:29:55] do not show suggestions for instance members on static calls and vice-versa
-    [2018-12-03 22:37:34] fixes test expectation
-
-  [UPD] phpactor/worse-reflection f1efd01a7a..531509a405
-
-    [2018-12-08 12:28:28] Require Support (#52)  * support for require / include    * renamed require to include walker    * handle binary expressio...
+    [2018-12-03 20:43:08] Support for is_countable()
+    [2018-12-03 21:26:56] Support for JSON_THROW_ON_ERROR
+    [2018-12-03 23:21:12] Support for array_key_first/array_key_last
 ```
 
 Installation
 ------------
 
 ```
-$ composer require dantleech/what-changed
+$ composer require dantleech/what-changed --dev
 ```
 
 Usage
