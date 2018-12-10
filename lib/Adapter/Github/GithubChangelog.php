@@ -56,7 +56,7 @@ class GithubChangelog implements Changelog
             yield Change::fromRawDateAndMessage(
                 $commit['commit']['author']['date'],
                 $commit['commit']['message']
-            );
+            )->withParents($commit['parents']);
         }
     }
 }

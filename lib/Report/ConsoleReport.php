@@ -51,8 +51,7 @@ class ConsoleReport implements Report
     {
         $line = str_replace(["\n", "\r\n", "\r"], ' ', $string);
 
-        $terminal = new Terminal();
-        $width = $terminal->getWidth() - 30;
+        $width = $this->terminalWidth();
 
         if (mb_strlen($line) > $width) {
             return mb_substr($line, 0, $width - 3) . '...';
@@ -146,5 +145,15 @@ class ConsoleReport implements Report
             }
             $output->writeln();
         }
+    }
+
+    private function terminalWidth(): int
+    {
+        if (class_exists(Terminal::class)) {
+            $terminal = new Terminal();
+            return $terminal->getWidth() - 30;
+        }
+
+        return 80;
     }
 }
