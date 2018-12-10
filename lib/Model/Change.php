@@ -16,13 +16,18 @@ class Change
      */
     private $message;
 
+    /**
+     * @var string[]
+     */
+    private $parents = [];
+
     public function __construct(DateTimeImmutable $date, string $message)
     {
         $this->date = $date;
         $this->message = $message;
     }
 
-    public static function fromRawDateAndMessage($argument0, $argument1)
+    public static function fromRawDateAndMessage($argument0, $argument1): self
     {
         return new self(new DateTimeImmutable($argument0), $argument1);
     }
@@ -35,5 +40,17 @@ class Change
     public function message(): string
     {
         return $this->message;
+    }
+
+    public function withParents(array $parents): self
+    {
+        $clone = clone $this;
+        $clone->parents = $parents;
+        return $clone;
+    }
+
+    public function isMerge(): bool
+    {
+        return count($this->parents) > 1;
     }
 }

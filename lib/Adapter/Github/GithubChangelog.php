@@ -4,6 +4,7 @@ namespace DTL\WhatChanged\Adapter\Github;
 
 use DTL\WhatChanged\Model\Change;
 use DTL\WhatChanged\Model\Changelog;
+use DTL\WhatChanged\Model\CommitFilter;
 use DTL\WhatChanged\Model\PackageHistory;
 use RuntimeException;
 
@@ -24,11 +25,17 @@ class GithubChangelog implements Changelog
      */
     private $client;
 
-    public function __construct(PackageHistory $history, GithubClient $client)
+    /**
+     * @var CommitFilter
+     */
+    private $filter;
+
+    public function __construct(PackageHistory $history, GithubClient $client, CommitFilter $filter)
     {
         $this->history = $history;
         $this->client = $client;
         $this->parser = new GithubUrlParser();
+        $this->filter = $filter;
     }
 
     public function getIterator()
@@ -56,6 +63,8 @@ class GithubChangelog implements Changelog
             yield Change::fromRawDateAndMessage(
                 $commit['commit']['author']['date'],
                 $commit['commit']['message']
+            )->withParents(
+                $commit['parents']
             );
         }
     }
