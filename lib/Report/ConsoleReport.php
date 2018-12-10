@@ -7,6 +7,7 @@ use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
+use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Model\ReportOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
@@ -37,7 +38,8 @@ class ConsoleReport implements Report
     }
 
     public function render(
-        ReportOutput $output
+        ReportOutput $output,
+        ReportOptions $options
     ): void {
         $changed = $this->histories->changed();
         $output->writeln(sprintf(
@@ -48,6 +50,7 @@ class ConsoleReport implements Report
         if ($changed->count() === 0) {
             return;
         }
+
         $output->writeln();
         /** @var PackageHistory $history */
         foreach ($changed as $history) {
@@ -70,9 +73,14 @@ class ConsoleReport implements Report
 
             $changelog = $this->factory->changeLogFor($history);
 
+            $index = 0;
             /** @var Change $change */
             foreach ($changelog as $index => $change) {
-                if ($index === 0) {
+                if (false === $options->showMergeCommits && $change->isMerge()) {
+                    continue;
+                }
+
+                if ($index++ === 0) {
                     $output->writeln();
                 }
 

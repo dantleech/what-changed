@@ -4,6 +4,7 @@ namespace DTL\WhatChanged\Command;
 
 use Composer\Command\BaseCommand;
 use DTL\WhatChanged\Adapter\Symfony\ConsoleReportOutput;
+use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\WhatChangedContainerFactory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -13,6 +14,7 @@ class WhatChangedCommand extends BaseCommand
 {
     private const OPTION_LIMIT = 'limit';
     private const OPTION_DIFF = 'diff';
+    private const OPTION_MERGE_COMMITS = 'merge-commits';
 
     /**
      * @var WhatChangedContainerFactory
@@ -32,12 +34,16 @@ class WhatChangedCommand extends BaseCommand
         $this->setDescription('Show what changed since your last update');
         $this->addOption(self::OPTION_LIMIT, null, InputOption::VALUE_REQUIRED, 'Number of composer lock files to compare', 2);
         $this->addOption(self::OPTION_DIFF, null, InputOption::VALUE_NONE, 'Show git diff for each changed package');
+        $this->addOption(self::OPTION_MERGE_COMMITS, null, InputOption::VALUE_NONE, 'Show merge commits');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        $options = new ReportOptions();
+        $options->showMergeCommits = $input->getOption(self::OPTION_MERGE_COMMITS);
+
         $this->containerFactory->create([
             'limit' => $input->getOption('limit'),
-        ])->consoleReport()->render(new ConsoleReportOutput($output));
+        ])->consoleReport()->render(new ConsoleReportOutput($output), $options);
     }
 }

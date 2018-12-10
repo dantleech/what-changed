@@ -29,7 +29,7 @@ class PackageHistory implements Countable
     /**
      * @var array<string>
      */
-    private $references;
+    private $references = [];
 
     /**
      * @var array
