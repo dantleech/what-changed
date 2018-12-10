@@ -239,10 +239,9 @@ class HistoryCompilerTest extends TestCase
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
         $this->assertTrue($histories->at(0)->isNew());
-
     }
 
-	public function testDetectsUpgradeInDevPackage()
+    public function testDetectsUpgradeInDevPackage()
     {
         $compiler = $this->createCompiler($this->createLock([
             [
