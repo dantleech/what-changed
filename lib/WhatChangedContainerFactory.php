@@ -21,13 +21,15 @@ class WhatChangedContainerFactory
         $defaults = [
             'limit' => 1,
             'cwd' => getcwd(),
+            'archive_path' => getcwd() . '/vendor/composer/archive'
         ];
         $config = array_merge($defaults, $this->config, $config);
         $this->require($config, ['cwd']);
 
         return new WhatChangedContainer(
             $config['cwd'],
-            $config['limit']
+            $config['limit'],
+            $config['archive_path'],
         );
     }
 

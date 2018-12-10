@@ -132,4 +132,9 @@ class PackageHistory implements Countable
     {
         return $this->state === self::STATE_REMOVED;
     }
+
+    public function isUpdated()
+    {
+        return $this->state === self::STATE_UPDATED;
+    }
 }

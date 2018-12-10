@@ -50,6 +50,27 @@ class PackageHistories implements IteratorAggregate, Countable
         }));
     }
 
+    public function updated(): self
+    {
+        return new self(array_filter($this->histories, function (PackageHistory $history) {
+            return $history->isUpdated();
+        }));
+    }
+
+    public function new(): self
+    {
+        return new self(array_filter($this->histories, function (PackageHistory $history) {
+            return $history->isNew();
+        }));
+    }
+
+    public function removed(): self
+    {
+        return new self(array_filter($this->histories, function (PackageHistory $history) {
+            return $history->isRemoved();
+        }));
+    }
+
     /**
      * {@inheritDoc}
      */

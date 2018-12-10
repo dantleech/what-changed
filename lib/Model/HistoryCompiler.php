@@ -88,7 +88,16 @@ class HistoryCompiler
             ));
         }
 
-        return json_decode($contents, true);
+        $decoded = json_decode($contents, true);
+
+        if (null === $decoded) {
+            throw new RuntimeException(sprintf(
+                'Could not decode JSON file "%s": %s',
+                $file->getFilename(), json_last_error_msg()
+            ));
+        }
+
+        return $decoded;
     }
 
     private function packagesFromLock(array $lock): array

@@ -23,12 +23,19 @@ final class WhatChangedContainer
      */
     private $limit;
 
+    /**
+     * @var string
+     */
+    private $archivePath;
+
     public function __construct(
         string $cwd,
-        int $limit
+        int $limit,
+        string $archivePath
     ) {
         $this->cwd = $cwd;
         $this->limit = $limit;
+        $this->archivePath = $archivePath;
     }
 
     public function histories(): PackageHistories
@@ -41,12 +48,12 @@ final class WhatChangedContainer
 
     public function changelogFactory(): ChangelogFactory
     {
-        return new GithubChangelogFactory($this->archiver()->archivePath());
+        return new GithubChangelogFactory($this->archivePath);
     }
 
     public function archiver(): ComposerLockArchiver
     {
-        return new ComposerLockArchiver($this->cwd);
+        return new ComposerLockArchiver($this->cwd, $this->archivePath);
     }
 
     public function consoleReport(): ConsoleReport
@@ -60,7 +67,7 @@ final class WhatChangedContainer
     public function lockFiles()
     {
         return new LockFiles(
-            $this->archiver()->archivePath(),
+            $this->archivePath,
             $this->cwd,
             $this->limit
         );

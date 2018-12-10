@@ -13,9 +13,15 @@ class ComposerLockArchiver
      */
     private $projectDirectory;
 
-    public function __construct(string $projectDirectory)
+    /**
+     * @var string
+     */
+    private $archivePath;
+
+    public function __construct(string $projectDirectory, string $archivePath)
     {
         $this->projectDirectory = $projectDirectory;
+        $this->archivePath = $archivePath;
     }
 
     public function archive(): void
@@ -26,13 +32,11 @@ class ComposerLockArchiver
             return;
         }
 
-        $archivePath = $this->resolvePath();
-
-        if (!file_exists(dirname($archivePath))) {
-            mkdir(dirname($archivePath), 0777, true);
+        if (!file_exists($this->archivePath)) {
+            mkdir($this->archivePath, 0777, true);
         }
 
-        if (copy($lockFilePath, $archivePath)) {
+        if (copy($lockFilePath, $this->resolvePath())) {
             return;
         }
 
@@ -53,20 +57,10 @@ class ComposerLockArchiver
         return null;
     }
 
-    public function archivePath()
-    {
-        return implode(DIRECTORY_SEPARATOR, [
-            $this->projectDirectory,
-            'vendor',
-            'composer',
-            'archive'
-        ]);
-    }
-
     private function resolvePath()
     {
         return implode(DIRECTORY_SEPARATOR, [
-            $this->archivePath(),
+            $this->archivePath,
             date(self::ARCHIVE_FORMAT) . '.lock'
         ]);
     }

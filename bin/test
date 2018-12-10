@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+<?php
+
+use DTL\WhatChanged\Command\WhatChangedCommand;
+use DTL\WhatChanged\WhatChangedContainerFactory;
+use Symfony\Component\Console\Application;
+
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$factory = new WhatChangedContainerFactory([
+    'cwd' => getcwd(),
+    'archive_path' => __DIR__ . '/../example',
+]);
+$container = $factory->create();
+
+$application = new Application();
+$application->add(new WhatChangedCommand($factory));
+$application->run();
