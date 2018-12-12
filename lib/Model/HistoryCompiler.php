@@ -48,7 +48,9 @@ class HistoryCompiler
             return $this->loadFile($path);
         }, $files);
 
-        $packageHistories = $this->buildHistories($files, $packageHistories);
+        if (count($files) > 1) {
+            $packageHistories = $this->buildHistories($files, $packageHistories);
+        }
 
         return new PackageHistories($packageHistories);
     }

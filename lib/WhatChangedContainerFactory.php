@@ -26,7 +26,7 @@ class WhatChangedContainerFactory
         $defaults = [
             self::KEY_LOCK1 => getcwd() . '/composer.lock',
             self::KEY_LOCK2 => getcwd() . '/vendor/composer/what-changed/composer.lock.old',
-            self::KEY_CACHE_PATH => getcwd() . '/vendor/composer/what-changed/archive',
+            self::KEY_CACHE_PATH => getcwd() . '/vendor/composer/what-changed/cache',
         ];
 
         $config = array_merge($defaults, $this->config, $config);

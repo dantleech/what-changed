@@ -63,6 +63,9 @@ class ConsoleReport implements Report
     private function whatNew(ReportOutput $output, PackageHistories $changed, ReportOptions $options)
     {
         if ($changed->new()->count() === 0) {
+            $output->writeln(
+                '<info>dantleech/what-changed:</> nothing changed'
+            );
             return;
         }
 

@@ -55,7 +55,7 @@ class HistoryCompilerTest extends TestCase
                 ],
         ]), $this->workspace->path('noexist2'));
         $histories = $compiler->compile();
-        $this->assertCount(1, $histories);
+        $this->assertCount(0, $histories);
     }
 
     public function testNoChangeWithTwoLocks()
