@@ -4,7 +4,6 @@ namespace DTL\WhatChanged\Tests\Unit\Model;
 
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
-use DTL\WhatChanged\Model\LockFiles;
 use PHPUnit\Framework\TestCase;
 use Phpactor\TestUtils\Workspace;
 use Prophecy\Argument;
@@ -31,17 +30,19 @@ class HistoryCompilerTest extends TestCase
         $this->filter->isValid(Argument::any())->willReturn(true);
     }
 
-    public function testNoLockFiles()
+    public function testNoFilesExisting()
     {
-        $compiler = $this->createCompiler($this->createLock([]));
+        $compiler = $this->createCompiler(
+            $this->workspace->path('noexist1'),
+            $this->workspace->path('noexist2'),
+        );
         $histories = $compiler->compile();
         $this->assertCount(0, $histories);
     }
 
     public function testNoChangeWithOneLock()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
                 'packages' => [
                     [
                         'name' => 'hello',
@@ -52,16 +53,14 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ]
-        ]));
+        ]), $this->workspace->path('noexist2'));
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
     }
 
     public function testNoChangeWithTwoLocks()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
                 'packages' => [
                     [
                         'name' => 'hello',
@@ -72,8 +71,7 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
-            [
+        ]), $this->createLock('composer_lock_old', [
                 'packages' => [
                     [
                         'name' => 'hello',
@@ -84,7 +82,6 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
         ]));
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
@@ -94,31 +91,28 @@ class HistoryCompilerTest extends TestCase
 
     public function testDetectsUpgradeInOnePackage()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '1234',
-                            'url' => 'foo'
-                        ],
-                    ]
-                ],
-            ],
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '456',
-                            'url' => 'foo'
-                        ],
-                    ]
-                ],
-            ],
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
+            'packages' => [
+                [
+                    'name' => 'hello',
+                    'source' => [
+                        'type' => 'git',
+                        'reference' => '1234',
+                        'url' => 'foo'
+                    ],
+                ]
+            ]
+        ]), $this->createLock('composer_lock_old', [
+            'packages' => [
+                [
+                    'name' => 'hello',
+                    'source' => [
+                        'type' => 'git',
+                        'reference' => '456',
+                        'url' => 'foo'
+                    ],
+                ]
+            ]
         ]));
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
@@ -128,37 +122,34 @@ class HistoryCompilerTest extends TestCase
 
     public function testDetectsNewPackage()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '1234',
-                            'url' => 'foo'
-                        ],
-                    ]
-                ],
-            ],
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '1234',
-                            'url' => 'foo'
-                        ],
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
+            'packages' => [
+                [
+                    'name' => 'hello',
+                    'source' => [
+                        'type' => 'git',
+                        'reference' => '1234',
+                        'url' => 'foo'
                     ],
-                    [
-                        'name' => 'goodbye',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '456',
-                            'url' => 'foo'
-                        ],
-                    ]
+                ],
+                [
+                    'name' => 'goodbye',
+                    'source' => [
+                        'type' => 'git',
+                        'reference' => '456',
+                        'url' => 'foo'
+                    ],
+                ]
+            ]
+        ]), $this->createLock('composer_lock_old', [
+            'packages' => [
+                [
+                    'name' => 'hello',
+                    'source' => [
+                        'type' => 'git',
+                        'reference' => '1234',
+                        'url' => 'foo'
+                    ],
                 ],
             ],
         ]));
@@ -170,8 +161,7 @@ class HistoryCompilerTest extends TestCase
 
     public function testDetectsRemovedPackage()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
                 'packages' => [
                     [
                         'name' => 'hello',
@@ -182,8 +172,7 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
-            [
+            ]), $this->createLock('composer_lock_old', [
                 'packages' => [
                     [
                         'name' => 'goodbye',
@@ -194,7 +183,6 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
         ]));
         $histories = $compiler->compile();
         $this->assertCount(2, $histories);
@@ -202,49 +190,9 @@ class HistoryCompilerTest extends TestCase
         $this->assertTrue($histories->at(0)->hasChanged());
     }
 
-    public function testDetectsReAddedPackages()
-    {
-        $compiler = $this->createCompiler($this->createLock([
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '1234',
-                            'url' => 'foo'
-                        ],
-                    ]
-                ],
-            ],
-            [
-                'packages' => [
-                    [
-                    ]
-                ],
-            ],
-            [
-                'packages' => [
-                    [
-                        'name' => 'hello',
-                        'source' => [
-                            'type' => 'git',
-                            'reference' => '456',
-                            'url' => 'foo'
-                        ],
-                    ]
-                ],
-            ],
-        ]));
-        $histories = $compiler->compile();
-        $this->assertCount(1, $histories);
-        $this->assertTrue($histories->at(0)->isNew());
-    }
-
     public function testDetectsUpgradeInDevPackage()
     {
-        $compiler = $this->createCompiler($this->createLock([
-            [
+        $compiler = $this->createCompiler($this->createLock('composer_lock', [
                 'packages-dev' => [
                     [
                         'name' => 'goodbye',
@@ -255,8 +203,7 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
-            [
+            ]), $this->createLock('composer_lock_old', [
                 'packages-dev' => [
                     [
                         'name' => 'goodbye',
@@ -267,7 +214,6 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-            ],
         ]));
         $histories = $compiler->compile();
         $this->assertCount(1, $histories);
@@ -275,22 +221,19 @@ class HistoryCompilerTest extends TestCase
         $this->assertFalse($histories->at(0)->isNew());
     }
 
-    private function createCompiler(LockFiles $lockFiles): HistoryCompiler
+    private function createCompiler(string $composerLock, string $composerLockOld): HistoryCompiler
     {
-        return new HistoryCompiler($lockFiles, $this->filter->reveal());
+        return new HistoryCompiler($composerLock, $composerLockOld, $this->filter->reveal());
     }
 
-    private function createLock(array $data)
+    private function createLock(string $path, array $lock): string
     {
-        foreach ($data as $index => $lockFile) {
-            file_put_contents($this->workspace->path('archive/lock'.$index.'.lock'), json_encode(array_replace_recursive([
-                'packages' => [],
-            ], $lockFile)));
-        }
-        return new LockFiles(
-            $this->workspace->path('archive'),
-            $this->workspace->path(''),
-            2
-        );
+        $path = $this->workspace->path($path);
+
+        file_put_contents($path, json_encode(array_replace_recursive([
+            'packages' => [],
+        ], $lock)));
+
+        return $path;
     }
 }

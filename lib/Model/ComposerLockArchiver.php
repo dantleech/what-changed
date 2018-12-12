@@ -6,22 +6,20 @@ use DTL\WhatChanged\Model\Exception\CouldNotArchiveComposerLock;
 
 class ComposerLockArchiver
 {
-    const ARCHIVE_FORMAT = 'YmdHis';
+    /**
+     * @var string
+     */
+    private $lockFilePath;
 
     /**
      * @var string
      */
-    private $projectDirectory;
+    private $compareLockFilePath;
 
-    /**
-     * @var string
-     */
-    private $archivePath;
-
-    public function __construct(string $projectDirectory, string $archivePath)
+    public function __construct(string $lockFilePath, string $compareLockFilePath)
     {
-        $this->projectDirectory = $projectDirectory;
-        $this->archivePath = $archivePath;
+        $this->lockFilePath = $lockFilePath;
+        $this->compareLockFilePath = $compareLockFilePath;
     }
 
     public function archive(): void
@@ -32,36 +30,28 @@ class ComposerLockArchiver
             return;
         }
 
-        if (!file_exists($this->archivePath)) {
-            mkdir($this->archivePath, 0777, true);
+        if (!file_exists(dirname($this->compareLockFilePath))) {
+            mkdir(dirname($this->compareLockFilePath), 0777, true);
         }
 
-        if (copy($lockFilePath, $this->resolvePath())) {
+        if (copy($lockFilePath, $this->compareLockFilePath)) {
             return;
         }
 
         throw new CouldNotArchiveComposerLock(sprintf(
             'Could not archive composer lock file from "%s" to "%s"',
             $lockFilePath,
-            $this->archivePath
+            $this->compareLockFilePath
         ));
     }
 
     private function resolveLockFilePath(): ?string
     {
-        $candidate = $this->projectDirectory . DIRECTORY_SEPARATOR . 'composer.lock';
+        $candidate = $this->lockFilePath . DIRECTORY_SEPARATOR . 'composer.lock';
         if (file_exists($candidate)) {
             return $candidate;
         }
 
         return null;
-    }
-
-    private function resolvePath()
-    {
-        return implode(DIRECTORY_SEPARATOR, [
-            $this->archivePath,
-            date(self::ARCHIVE_FORMAT) . '.lock'
-        ]);
     }
 }
