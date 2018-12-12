@@ -7,8 +7,9 @@ What Changed?
 
 Generates change reports when you update [Composer](https://getcomposer.org).
 
-This plugin _archives_ your lock files, when you update it compares the new file with the previous one and then
-calls the Github API to get the _commit messages_ for the differences between any upgraded packages.
+This plugin makes a copy of your lock files before a composer update, and then
+compares the new file with the old one. It then calls the Github API to get
+the _commit messages_ for the differences between any upgraded packages.
 
 **Features**:
 
@@ -17,7 +18,6 @@ calls the Github API to get the _commit messages_ for the differences between an
 **Current limitations / features**:
 
 - Only packages hosted on Github are supported.
-- Lock files are archived forever (or until you delete them from `vendor/composer/archive`).
 
 ```bash
 $ composer update
@@ -70,10 +70,9 @@ You can also (re) generate the report at any time by calling the `composer what-
 $ composer what-changed
 ```
 
-This plugin archives your lock files, so you can see for an arbitrary number of lock files with the `--limit` option:
+This as the plugin makes a copy of your old composer lock file, you can review
+the last reported changes at any time with the `what-changed` command:
 
 ```
-$ composer what-changed --limit=10
+$ composer what-changed
 ```
-
-This will show the changes for the past 10 archived lock files.
