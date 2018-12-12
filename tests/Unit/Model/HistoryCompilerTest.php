@@ -34,7 +34,7 @@ class HistoryCompilerTest extends TestCase
     {
         $compiler = $this->createCompiler(
             $this->workspace->path('noexist1'),
-            $this->workspace->path('noexist2'),
+            $this->workspace->path('noexist2')
         );
         $histories = $compiler->compile();
         $this->assertCount(0, $histories);
