@@ -3,7 +3,6 @@
 namespace DTL\WhatChanged\Model;
 
 use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
-use RuntimeException;
 
 class Filesystem
 {
@@ -21,7 +20,9 @@ class Filesystem
         }
 
         throw new WhatChangedRuntimeException(sprintf(
-            'Could not copy file "%s" to "%s"', $sourcePath, $targetPath
+            'Could not copy file "%s" to "%s"',
+            $sourcePath,
+            $targetPath
         ));
     }
 
@@ -36,7 +37,8 @@ class Filesystem
         }
 
         throw new WhatChangedRuntimeException(sprintf(
-            'Could not create directory "%s"', $path
+            'Could not create directory "%s"',
+            $path
         ));
     }
 
@@ -62,7 +64,8 @@ class Filesystem
         }
 
         throw new WhatChangedRuntimeException(sprintf(
-            'File "%s" does not exist', $path
+            'File "%s" does not exist',
+            $path
         ));
     }
 }

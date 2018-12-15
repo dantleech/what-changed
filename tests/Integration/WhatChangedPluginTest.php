@@ -2,9 +2,6 @@
 
 namespace DTL\WhatChanged\Tests\Integration;
 
-use Composer\Composer;
-use Composer\EventDispatcher\EventDispatcher;
-use Composer\Factory;
 use Composer\IO\BufferIO;
 use Composer\Plugin\Capability\CommandProvider;
 use Composer\Script\Event;
