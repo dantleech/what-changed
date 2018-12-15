@@ -10,20 +10,20 @@ class WhatChangedCommandTest extends TestCase
     public function testWhatChanged()
     {
         $process = $this->runCommand();
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertSuccess($process);
     }
 
     public function testWithMergeCommits()
     {
         $process = $this->runCommand(['--merge-commits']);
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertSuccess($process);
         $this->assertContains('Merge', $process->getOutput());
     }
 
     public function testWithFullMessage()
     {
         $process = $this->runCommand(['--full-message']);
-        $this->assertEquals(0, $process->getExitCode());
+        $this->assertSuccess($process);
         $this->assertContains('what the user has inputed', $process->getOutput());
     }
 
@@ -37,5 +37,14 @@ class WhatChangedCommandTest extends TestCase
         $process->run();
 
         return $process;
+    }
+
+    private function assertSuccess(Process $process)
+    {
+        if (false === $process->isSuccessful()) {
+            echo $process->getOutput();
+            echo $process->getErrorOutput();
+        }
+        $this->assertEquals(0, $process->getExitCode());
     }
 }
