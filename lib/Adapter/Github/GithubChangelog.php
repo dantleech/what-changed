@@ -3,6 +3,7 @@
 namespace DTL\WhatChanged\Adapter\Github;
 
 use DTL\WhatChanged\Model\Change;
+use DTL\WhatChanged\Model\ChangeBuilder;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\PackageHistory;
 use RuntimeException;
@@ -53,10 +54,13 @@ class GithubChangelog implements Changelog
         }
 
         foreach ($response['commits'] as $commit) {
-            yield Change::fromRawDateAndMessage(
-                $commit['commit']['author']['date'],
-                $commit['commit']['message']
-            )->withParents($commit['parents']);
+            yield ChangeBuilder::create()
+                ->rawDate($commit['commit']['author']['date'])
+                ->message($commit['commit']['message'])
+                ->author($commit['committer']['login'])
+                ->parents($commit['parents'])
+                ->sha($commit['sha'])
+                ->build();
         }
     }
 }

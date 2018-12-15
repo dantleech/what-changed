@@ -9,7 +9,7 @@ use DTL\WhatChanged\Model\Filesystem;
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use DTL\WhatChanged\Model\PackageHistories;
-use DTL\WhatChanged\Report\ConsoleReport;
+use DTL\WhatChanged\Adapter\Symfony\Report\ConsoleReport;
 
 final class WhatChangedContainer
 {

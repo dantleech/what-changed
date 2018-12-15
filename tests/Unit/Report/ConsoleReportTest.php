@@ -10,7 +10,7 @@ use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\Model\ReportOptions;
-use DTL\WhatChanged\Report\ConsoleReport;
+use DTL\WhatChanged\Adapter\Symfony\Report\ConsoleReport;
 use PHPUnit\Framework\TestCase;
 
 class ConsoleReportTest extends TestCase

@@ -21,15 +21,29 @@ class Change
      */
     private $parents = [];
 
-    public function __construct(DateTimeImmutable $date, string $message)
+    /**
+     * @var string
+     */
+    private $sha;
+
+    /**
+     * @var string
+     */
+    private $author;
+
+    public function __construct(
+        DateTimeImmutable $date,
+        string $message,
+        string $sha,
+        array $parents,
+        string $author
+    )
     {
         $this->date = $date;
         $this->message = $message;
-    }
-
-    public static function fromRawDateAndMessage($argument0, $argument1): self
-    {
-        return new self(new DateTimeImmutable($argument0), $argument1);
+        $this->sha = $sha;
+        $this->parents = $parents;
+        $this->author = $author;
     }
 
     public function date(): DateTimeImmutable
@@ -42,15 +56,18 @@ class Change
         return $this->message;
     }
 
-    public function withParents(array $parents): self
-    {
-        $clone = clone $this;
-        $clone->parents = $parents;
-        return $clone;
-    }
-
     public function isMerge(): bool
     {
         return count($this->parents) > 1;
+    }
+
+    public function sha(): string
+    {
+        return $this->sha;
+    }
+
+    public function author(): string
+    {
+        return $this->author;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace DTL\WhatChanged\Report;
+namespace DTL\WhatChanged\Adapter\Symfony\Report;
 
 use DTL\WhatChanged\Model\Change;
 use DTL\WhatChanged\Model\ChangelogFactory;
@@ -45,19 +45,6 @@ class ConsoleReport implements Report
         $this->whatRemoved($output, $changed, $options);
         $this->whatNew($output, $changed, $options);
         $this->whatUpdated($output, $changed, $options);
-    }
-
-    private function formatMessage(string $string): string
-    {
-        $line = str_replace(["\n", "\r\n", "\r"], ' ', $string);
-
-        $width = $this->terminalWidth();
-
-        if (mb_strlen($line) > $width) {
-            return mb_substr($line, 0, $width - 3) . '...';
-        }
-
-        return $line;
     }
 
     private function whatNew(ReportOutput $output, PackageHistories $changed, ReportOptions $options)
@@ -123,8 +110,8 @@ class ConsoleReport implements Report
             $output->writeln(sprintf(
                 '  <info>%s</> %s..%s',
                 $history->name(),
-                substr($history->first(), 0, 10),
-                substr($history->last(), 0, 10)
+                substr($history->first(), 0, 8),
+                substr($history->last(), 0, 8)
             ));
         
             $changelog = $this->factory->changeLogFor($history);
@@ -139,14 +126,20 @@ class ConsoleReport implements Report
                 if ($index++ === 0) {
                     $output->writeln();
                 }
-        
-                $output->writeln(sprintf(
-                    '    [<comment>%s</>] %s',
-                    $change->date()->format('Y-m-d H:i:s'),
-                    $this->formatMessage($change->message())
-                ));
+
+                $message = $this->formatChange($change, $options);
+                $output->writeln($message);
+
+                if (false === $options->shortMessage) {
+                    $output->writeln();
+                    $output->writeln($this->indent($change->message(), 6));
+                    $output->writeln();
+                }
             }
-            $output->writeln();
+
+            if ($options->shortMessage) {
+                $output->writeln();
+            }
         }
     }
 
@@ -158,5 +151,68 @@ class ConsoleReport implements Report
         }
 
         return 80;
+    }
+
+    private function formatChange(Change $change, ReportOptions $options)
+    {
+        $parts = [];
+        $parts[] = '   ';
+        $realLength = 4;
+
+        if ($options->showCommitDates) {
+            $date = $change->date()->format('Y-m-d H:i:s');
+            $parts[] = sprintf('[<comment>%s</>]', $date);
+            $realLength += mb_strlen($date);
+        }
+
+        if ($options->showCommitSha) {
+            $parts[] = sprintf('<info>%s</>', substr($change->sha(), 0, 8));
+            $realLength += 8;
+        }
+
+        if ($options->showAuthor) {
+            $parts[] = sprintf('<comment>%s</comment>', $change->author());
+            $realLength += mb_strlen($change->author());
+        }
+
+        if ($options->shortMessage) {
+            $message = $this->sanitizeOneLineMessage($change->message());
+            $parts[] = $message;
+            $realLength += mb_strlen($message);
+        }
+
+        $realLength += count($parts);
+
+        return $this->truncateToTerminalWidth(implode(' ', $parts), $realLength);
+    }
+
+    private function indent(string $string, int $int)
+    {
+        $line = str_replace(["\n", "\r\n", "\r"], PHP_EOL, $string);
+        $lines = explode(PHP_EOL, $line);
+        return implode(PHP_EOL, array_map(function (string $line) use ($int) {
+            return str_repeat(' ', $int) . $line;
+        }, $lines));
+    }
+
+    private function sanitizeOneLineMessage(string $string): string
+    {
+        return str_replace(["\n", "\r\n", "\r"], ' ', $string);
+    }
+
+    private function truncateToTerminalWidth(string $line, int $realLength)
+    {
+        $width = $this->terminalWidth();
+        $realLength -= 29;
+
+        if ($realLength > $width) {
+            return mb_substr(
+                $line,
+                0,
+                mb_strlen($line) - ($realLength - $width) - 3
+            ) . '...';
+        }
+
+        return $line;
     }
 }
