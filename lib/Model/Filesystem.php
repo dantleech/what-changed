@@ -42,15 +42,27 @@ class Filesystem
 
     public function getContents(string $path)
     {
+        $this->assertFileExists($path);
         $contents = file_get_contents($path);
 
         if (false === $contents) {
-            throw new RuntimeException(sprintf(
+            throw new WhatChangedRuntimeException(sprintf(
                 'Could not read file "%s"',
                 $path
             ));
         }
 
         return $contents;
+    }
+
+    private function assertFileExists(string $path): void
+    {
+        if (file_exists($path)) {
+            return;
+        }
+
+        throw new WhatChangedRuntimeException(sprintf(
+            'File "%s" does not exist', $path
+        ));
     }
 }

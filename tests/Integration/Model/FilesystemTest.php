@@ -2,6 +2,7 @@
 
 namespace DTL\WhatChanged\Tests\Integration\Model;
 
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\Filesystem;
 use PHPUnit\Framework\TestCase;
 use Phpactor\TestUtils\Workspace;
@@ -46,5 +47,20 @@ class FilesystemTest extends TestCase
         $this->filesystsem->copy(__FILE__, $targetPath);
         $this->assertTrue(file_exists($targetPath));
         $this->assertEquals(file_get_contents(__FILE__), file_get_contents($targetPath));
+    }
+
+    public function testGetContentsFileDoesNotExist()
+    {
+        $this->expectException(WhatChangedRuntimeException::class);
+        $path = $this->workspace->path('foobar');
+        $this->filesystsem->getContents($path);
+    }
+
+    public function testGetContents()
+    {
+        $this->assertEquals(
+            file_get_contents(__FILE__),
+            $this->filesystsem->getContents(__FILE__)
+        );
     }
 }
