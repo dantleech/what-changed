@@ -1,16 +1,17 @@
-#!/usr/bin/env bash
+#!/usr/bin/env php
 <?php
 
+use Composer\Console\Application;
 use DTL\WhatChanged\Command\WhatChangedCommand;
 use DTL\WhatChanged\WhatChangedContainerFactory;
-use Symfony\Component\Console\Application;
 
 
 require __DIR__ . '/../vendor/autoload.php';
 
 $factory = new WhatChangedContainerFactory([
-    'cwd' => getcwd(),
-    'archive_path' => __DIR__ . '/../example',
+    'lock_path' => getcwd() . '/composer.lock',
+    'compare_lock_path' => __DIR__ . '/../example/example.lock',
+    'cache_path' => __DIR__ . '/../example/cache',
 ]);
 $container = $factory->create();
 

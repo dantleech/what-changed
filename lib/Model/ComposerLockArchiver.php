@@ -2,66 +2,51 @@
 
 namespace DTL\WhatChanged\Model;
 
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\Exception\CouldNotArchiveComposerLock;
 
 class ComposerLockArchiver
 {
-    const ARCHIVE_FORMAT = 'YmdHis';
+    /**
+     * @var string
+     */
+    private $lockFilePath;
 
     /**
      * @var string
      */
-    private $projectDirectory;
+    private $compareLockFilePath;
 
     /**
-     * @var string
+     * @var Filesystem
      */
-    private $archivePath;
+    private $filesystem;
 
-    public function __construct(string $projectDirectory, string $archivePath)
+    public function __construct(Filesystem $filesystem, string $lockFilePath, string $compareLockFilePath)
     {
-        $this->projectDirectory = $projectDirectory;
-        $this->archivePath = $archivePath;
+        $this->lockFilePath = $lockFilePath;
+        $this->compareLockFilePath = $compareLockFilePath;
+        $this->filesystem = $filesystem;
     }
 
     public function archive(): void
     {
-        $lockFilePath = $this->resolveLockFilePath();
-
-        if (null === $lockFilePath) {
+        if (!$this->filesystem->exists($this->lockFilePath)) {
             return;
         }
 
-        if (!file_exists($this->archivePath)) {
-            mkdir($this->archivePath, 0777, true);
-        }
+        $e = null;
 
-        if (copy($lockFilePath, $this->resolvePath())) {
+        try {
+            $this->filesystem->copy($this->lockFilePath, $this->compareLockFilePath);
             return;
+        } catch (WhatChangedRuntimeException $e) {
         }
 
         throw new CouldNotArchiveComposerLock(sprintf(
             'Could not archive composer lock file from "%s" to "%s"',
-            $lockFilePath,
-            $this->archivePath
-        ));
-    }
-
-    private function resolveLockFilePath(): ?string
-    {
-        $candidate = $this->projectDirectory . DIRECTORY_SEPARATOR . 'composer.lock';
-        if (file_exists($candidate)) {
-            return $candidate;
-        }
-
-        return null;
-    }
-
-    private function resolvePath()
-    {
-        return implode(DIRECTORY_SEPARATOR, [
-            $this->archivePath,
-            date(self::ARCHIVE_FORMAT) . '.lock'
-        ]);
+            $this->lockFilePath,
+            $this->compareLockFilePath
+        ), 0, $e);
     }
 }

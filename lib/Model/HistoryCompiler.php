@@ -3,97 +3,75 @@
 namespace DTL\WhatChanged\Model;
 
 use RuntimeException;
-use SplFileInfo;
 
 class HistoryCompiler
 {
-    /**
-     * @var LockFiles<SplFileInfo>
-     */
-    private $files;
-
     /**
      * @var Filter
      */
     private $filter;
 
-    public function __construct(LockFiles $files, Filter $filter)
-    {
-        $this->files = $files;
+    /**
+     * @var string
+     */
+    private $compareLockFilePath;
+
+    /**
+     * @var string
+     */
+    private $lockFilePath;
+
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    public function __construct(
+        Filesystem $filesystem,
+        string $lockFilePath,
+        string $compareLockFilePath,
+        Filter $filter
+    ) {
         $this->filter = $filter;
+        $this->compareLockFilePath = $compareLockFilePath;
+        $this->lockFilePath = $lockFilePath;
+        $this->filesystem = $filesystem;
     }
 
     public function compile(): PackageHistories
     {
         $packageHistories = [];
 
-        foreach ($this->files as $index => $file) {
-            $lockPackageNames = [];
-            $lock = $this->loadFile($file);
+        $files = [
+            $this->compareLockFilePath,
+            $this->lockFilePath,
+        ];
 
-            $packages = $this->packagesFromLock($lock);
+        $files = array_filter($files, function (string $path) {
+            return $this->filesystem->exists($path);
+        });
 
-            foreach ($packages as $package) {
-                if (!$this->filter->isValid($package)) {
-                    continue;
-                }
+        $files = array_map(function (string $path) {
+            return $this->loadFile($path);
+        }, $files);
 
-                if (!isset($package['source'])) {
-                    continue;
-                }
-
-                $packageName = $package['name'];
-                $lockPackageNames[] = $packageName;
-
-                $source = $package['source'];
-
-                $isNew = false;
-                if (!isset($packageHistories[$packageName])) {
-                    $packageHistories[$packageName] = new PackageHistory(
-                        $packageName,
-                        $source['type'],
-                        $source['url']
-                    );
-                    $isNew = true;
-                }
-
-                /** @var PackageHistory $packageHistory */
-                $packageHistory = $packageHistories[$packageName];
-
-                // if this is the first time the package has been seen (and
-                // this is not the first iteration) then it has been added.
-                if (($isNew || $packageHistory->isRemoved()) && $index > 0) {
-                    $packageHistory->markAsNew();
-                }
-
-                $packageHistory->addReference($source['reference']);
-            }
-
-            foreach (array_diff(array_keys($packageHistories), $lockPackageNames) as $removedPackageName) {
-                $packageHistories[$removedPackageName]->markAsRemoved();
-            }
+        if (count($files) > 1) {
+            $packageHistories = $this->buildHistories($files, $packageHistories);
         }
 
         return new PackageHistories($packageHistories);
     }
 
-    private function loadFile(SplFileInfo $file): array
+    private function loadFile(string $path): array
     {
-        $contents = file_get_contents($file->getPathname());
-
-        if (false === $contents) {
-            throw new RuntimeException(sprintf(
-                'Could not read file "%s"',
-                $file->getPathname()
-            ));
-        }
+        $contents = $this->filesystem->getContents($path);
 
         $decoded = json_decode($contents, true);
 
         if (null === $decoded) {
             throw new RuntimeException(sprintf(
                 'Could not decode JSON file "%s": %s',
-                $file->getFilename(),
+                $path,
                 json_last_error_msg()
             ));
         }
@@ -114,5 +92,55 @@ class HistoryCompiler
         }
 
         return $packages;
+    }
+
+    private function buildHistories(array $files, array $packageHistories)
+    {
+        foreach ($files as $index => $file) {
+            $lockPackageNames = [];
+            $packages = $this->packagesFromLock($file);
+        
+            foreach ($packages as $package) {
+                if (!$this->filter->isValid($package)) {
+                    continue;
+                }
+        
+                if (!isset($package['source'])) {
+                    continue;
+                }
+        
+                $packageName = $package['name'];
+                $lockPackageNames[] = $packageName;
+        
+                $source = $package['source'];
+        
+                $isNew = false;
+                if (!isset($packageHistories[$packageName])) {
+                    $packageHistories[$packageName] = new PackageHistory(
+                        $packageName,
+                        $source['type'],
+                        $source['url']
+                    );
+                    $isNew = true;
+                }
+        
+                /** @var PackageHistory $packageHistory */
+                $packageHistory = $packageHistories[$packageName];
+        
+                // if this is the first time the package has been seen (and
+                // this is not the first iteration) then it has been added.
+                if (($isNew || $packageHistory->isRemoved()) && $index > 0) {
+                    $packageHistory->markAsNew();
+                }
+        
+                $packageHistory->addReference($source['reference']);
+            }
+        
+            foreach (array_diff(array_keys($packageHistories), $lockPackageNames) as $removedPackageName) {
+                $packageHistories[$removedPackageName]->markAsRemoved();
+            }
+        }
+
+        return $packageHistories;
     }
 }

@@ -5,9 +5,9 @@ namespace DTL\WhatChanged;
 use DTL\WhatChanged\Adapter\Github\GithubChangelogFactory;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\ComposerLockArchiver;
+use DTL\WhatChanged\Model\Filesystem;
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
-use DTL\WhatChanged\Model\LockFiles;
 use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Report\ConsoleReport;
 
@@ -16,44 +16,55 @@ final class WhatChangedContainer
     /**
      * @var string
      */
-    private $cwd;
-
-    /**
-     * @var int
-     */
-    private $limit;
+    private $lockFilePath;
 
     /**
      * @var string
      */
-    private $archivePath;
+    private $compareLockFilePath;
+
+    /**
+     * @var string
+     */
+    private $cachePath;
 
     public function __construct(
-        string $cwd,
-        int $limit,
-        string $archivePath
+        string $lockFilePath,
+        string $compareLockFilePath,
+        string $cachePath
     ) {
-        $this->cwd = $cwd;
-        $this->limit = $limit;
-        $this->archivePath = $archivePath;
+        $this->lockFilePath = $lockFilePath;
+        $this->compareLockFilePath = $compareLockFilePath;
+        $this->cachePath = $cachePath;
     }
 
     public function histories(): PackageHistories
     {
         return (new HistoryCompiler(
-            $this->lockFiles(),
+            $this->filesystem(),
+            $this->lockFilePath,
+            $this->compareLockFilePath,
             $this->filter()
         ))->compile();
     }
 
     public function changelogFactory(): ChangelogFactory
     {
-        return new GithubChangelogFactory($this->archivePath);
+        return new GithubChangelogFactory($this->cachePath);
+    }
+
+    public function filesystem(): Filesystem
+    {
+        return new Filesystem();
     }
 
     public function archiver(): ComposerLockArchiver
     {
-        return new ComposerLockArchiver($this->cwd, $this->archivePath);
+        return new ComposerLockArchiver(
+            $this->filesystem(),
+            $this->lockFilePath,
+            $this->compareLockFilePath
+        );
     }
 
     public function consoleReport(): ConsoleReport
@@ -61,15 +72,6 @@ final class WhatChangedContainer
         return new ConsoleReport(
             $this->histories(),
             $this->changelogFactory()
-        );
-    }
-
-    public function lockFiles()
-    {
-        return new LockFiles(
-            $this->archivePath,
-            $this->cwd,
-            $this->limit
         );
     }
 
