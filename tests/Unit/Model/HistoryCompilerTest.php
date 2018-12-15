@@ -2,6 +2,7 @@
 
 namespace DTL\WhatChanged\Tests\Unit\Model;
 
+use DTL\WhatChanged\Model\Filesystem;
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use PHPUnit\Framework\TestCase;
@@ -21,11 +22,17 @@ class HistoryCompilerTest extends TestCase
      */
     private $filter;
 
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public function setUp()
     {
         $this->workspace = Workspace::create(__DIR__ . '/../../Workspace');
         $this->workspace->reset();
         $this->workspace->mkdir('archive');
+        $this->filesystem = new Filesystem();
         $this->filter = $this->prophesize(Filter::class);
         $this->filter->isValid(Argument::any())->willReturn(true);
     }
@@ -223,7 +230,7 @@ class HistoryCompilerTest extends TestCase
 
     private function createCompiler(string $composerLock, string $composerLockOld): HistoryCompiler
     {
-        return new HistoryCompiler($composerLock, $composerLockOld, $this->filter->reveal());
+        return new HistoryCompiler($this->filesystem, $composerLock, $composerLockOld, $this->filter->reveal());
     }
 
     private function createLock(string $path, array $lock): string

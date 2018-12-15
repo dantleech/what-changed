@@ -3,6 +3,7 @@
 namespace DTL\WhatChanged\Model;
 
 use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
+use RuntimeException;
 
 class Filesystem
 {
@@ -37,5 +38,19 @@ class Filesystem
         throw new WhatChangedRuntimeException(sprintf(
             'Could not create directory "%s"', $path
         ));
+    }
+
+    public function getContents(string $path)
+    {
+        $contents = file_get_contents($path);
+
+        if (false === $contents) {
+            throw new RuntimeException(sprintf(
+                'Could not read file "%s"',
+                $path
+            ));
+        }
+
+        return $contents;
     }
 }

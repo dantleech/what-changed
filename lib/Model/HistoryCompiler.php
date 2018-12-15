@@ -21,7 +21,13 @@ class HistoryCompiler
      */
     private $lockFilePath;
 
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
     public function __construct(
+        Filesystem $filesystem,
         string $lockFilePath,
         string $compareLockFilePath,
         Filter $filter
@@ -29,6 +35,7 @@ class HistoryCompiler
         $this->filter = $filter;
         $this->compareLockFilePath = $compareLockFilePath;
         $this->lockFilePath = $lockFilePath;
+        $this->filesystem = $filesystem;
     }
 
     public function compile(): PackageHistories
@@ -41,7 +48,7 @@ class HistoryCompiler
         ];
 
         $files = array_filter($files, function (string $path) {
-            return file_exists($path);
+            return $this->filesystem->exists($path);
         });
 
         $files = array_map(function (string $path) {
@@ -57,14 +64,7 @@ class HistoryCompiler
 
     private function loadFile(string $path): array
     {
-        $contents = file_get_contents($path);
-
-        if (false === $contents) {
-            throw new RuntimeException(sprintf(
-                'Could not read file "%s"',
-                $path
-            ));
-        }
+        $contents = $this->filesystem->getContents($path);
 
         $decoded = json_decode($contents, true);
 
