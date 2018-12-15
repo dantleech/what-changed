@@ -10,7 +10,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $factory = new WhatChangedContainerFactory([
     'lock_path' => getcwd() . '/composer.lock',
-    'compare_lock_path' => getcwd() . '/example/20181210225800.lock',
+    'compare_lock_path' => __DIR__ . '/../example/example.lock',
+    'cache_path' => __DIR__ . '/../example/cache',
 ]);
 $container = $factory->create();
 
