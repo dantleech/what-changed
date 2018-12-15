@@ -56,7 +56,7 @@ class GithubChangelog implements Changelog
             yield ChangeBuilder::create()
                 ->rawDate($commit['commit']['author']['date'])
                 ->message($commit['commit']['message'])
-                ->author($commit['committer']['login'])
+                ->author($commit['committer']['login'] ?? '<???>')
                 ->parents($commit['parents'])
                 ->sha($commit['sha'])
                 ->build();

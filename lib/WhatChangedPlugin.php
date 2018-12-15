@@ -40,7 +40,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
         try {
             $this->containerFactory()->create()->archiver()->archive();
         } catch (WhatChangedRuntimeException $e) {
-            $event->getIO()->writeError($e->getMessage());
+            $event->getIO()->writeError('dantleech/whatchanged: ERROR: ' . $e->getMessage());
         }
     }
 
