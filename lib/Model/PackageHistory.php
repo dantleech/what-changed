@@ -3,7 +3,7 @@
 namespace DTL\WhatChanged\Model;
 
 use Countable;
-use RuntimeException;
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 
 class PackageHistory implements Countable
 {
@@ -102,7 +102,7 @@ class PackageHistory implements Countable
 
     private function throwNoReferencesException()
     {
-        throw new RuntimeException(sprintf(
+        throw new WhatChangedRuntimeException(sprintf(
             'No references for package "%s", cannot access first/last',
             $this->name
         ));

@@ -2,7 +2,8 @@
 
 namespace DTL\WhatChanged\Tests\Unit\Report;
 
-use DTL\WhatChanged\Model\Change;
+use ArrayIterator;
+use DTL\WhatChanged\Model\ChangeBuilder;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\Output\BufferedReportOutput;
@@ -10,7 +11,7 @@ use DTL\WhatChanged\Model\PackageHistories;
 use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\Model\ReportOptions;
-use DTL\WhatChanged\Report\ConsoleReport;
+use DTL\WhatChanged\Adapter\Symfony\Report\ConsoleReport;
 use PHPUnit\Framework\TestCase;
 
 class ConsoleReportTest extends TestCase
@@ -34,6 +35,7 @@ class ConsoleReportTest extends TestCase
     {
         $this->factory = $this->prophesize(ChangelogFactory::class);
         $this->output = new BufferedReportOutput();
+        putenv('COLUMNS=100');
     }
 
     public function testRendersChangedPackages()
@@ -43,13 +45,10 @@ class ConsoleReportTest extends TestCase
         $packageHistory->addReference('dsa');
 
         $report = $this->create([ $packageHistory ]);
-        $this->factory->changeLogFor($packageHistory)->willReturn(new class implements Changelog {
-            public function getIterator()
-            {
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Hello World');
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Goodbye World');
-            }
-        });
+        $this->factory->changeLogFor($packageHistory)->willReturn($this->createChangelog([
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Hello World')->build(),
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Goodbye World')->build(),
+        ]));
         $options = new ReportOptions();
         $report->render($this->output, $options);
 
@@ -64,14 +63,10 @@ class ConsoleReportTest extends TestCase
         $packageHistory->addReference('dsa');
 
         $report = $this->create([ $packageHistory ]);
-        $this->factory->changeLogFor($packageHistory)->willReturn(new class implements Changelog {
-            public function getIterator()
-            {
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Hello World')
-                    ->withParents(['one', 'two']);
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Goodbye World');
-            }
-        });
+        $this->factory->changeLogFor($packageHistory)->willReturn($this->createChangelog([
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Hello World')->parents(['one', 'two'])->build(),
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Goodbye World')->build(),
+        ]));
 
         $options = new ReportOptions();
         $report->render($this->output, $options);
@@ -87,14 +82,10 @@ class ConsoleReportTest extends TestCase
         $packageHistory->addReference('dsa');
 
         $report = $this->create([ $packageHistory ]);
-        $this->factory->changeLogFor($packageHistory)->willReturn(new class implements Changelog {
-            public function getIterator()
-            {
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Hello World')
-                    ->withParents(['one', 'two']);
-                yield Change::fromRawDateAndMessage('2018-01-01', 'Goodbye World');
-            }
-        });
+        $this->factory->changeLogFor($packageHistory)->willReturn($this->createChangelog([
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Hello World')->parents(['one', 'two'])->build(),
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Goodbye World')->build(),
+        ]));
 
         $options = new ReportOptions();
         $options->showMergeCommits = true;
@@ -108,5 +99,30 @@ class ConsoleReportTest extends TestCase
     {
         $histories = new PackageHistories($histories);
         return new ConsoleReport($histories, $this->factory->reveal());
+    }
+
+    private function changeBuilder(): ChangeBuilder
+    {
+        return ChangeBuilder::create()
+            ->author('dantleech')
+            ->message('hello')
+            ->rawDate('2018-01-01')
+            ->parents([])
+            ->sha('abcd1234');
+    }
+
+    private function createChangelog(array $array)
+    {
+        return new class($array) implements Changelog {
+            private $changes;
+            public function __construct(array $changes)
+            {
+                $this->changes = $changes;
+            }
+            public function getIterator()
+            {
+                return new ArrayIterator($this->changes);
+            }
+        };
     }
 }

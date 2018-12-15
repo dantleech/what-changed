@@ -12,6 +12,7 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use DTL\WhatChanged\Adapter\Composer\ComposerReportOutput;
 use DTL\WhatChanged\Command\WhatChangedCommand;
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\ReportOptions;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
@@ -36,15 +37,23 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 
     public function handlePreUpdate(Event $event): void
     {
-        $this->containerFactory()->create()->archiver()->archive();
+        try {
+            $this->containerFactory()->create()->archiver()->archive();
+        } catch (WhatChangedRuntimeException $e) {
+            $event->getIO()->writeError($e->getMessage());
+        }
     }
 
     public function handlePostUpdate(Event $event)
     {
-        $this->containerFactory()->create()->consoleReport()->render(
-            new ComposerReportOutput($event->getIO()),
-            new ReportOptions()
-        );
+        try {
+            $this->containerFactory()->create()->consoleReport()->render(
+                new ComposerReportOutput($event->getIO()),
+                new ReportOptions()
+            );
+        } catch (WhatChangedRuntimeException $e) {
+            $event->getIO()->writeError($e->getMessage());
+        }
     }
 
     /**
