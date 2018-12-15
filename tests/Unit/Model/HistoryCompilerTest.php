@@ -6,42 +6,37 @@ use DTL\WhatChanged\Model\Filesystem;
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use PHPUnit\Framework\TestCase;
-use Phpactor\TestUtils\Workspace;
 use Prophecy\Argument;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class HistoryCompilerTest extends TestCase
 {
     /**
-     * @var Workspace
-     */
-    private $workspace;
-
-    /**
      * @var ObjectProphecy&Filter
      */
     private $filter;
 
     /**
-     * @var Filesystem
+     * @var Filesystem&ObjectProphecy
      */
     private $filesystem;
 
     public function setUp()
     {
-        $this->workspace = Workspace::create(__DIR__ . '/../../Workspace');
-        $this->workspace->reset();
-        $this->workspace->mkdir('archive');
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $this->prophesize(Filesystem::class);
         $this->filter = $this->prophesize(Filter::class);
         $this->filter->isValid(Argument::any())->willReturn(true);
     }
 
     public function testNoFilesExisting()
     {
+        $noExistPath1 = 'noexist1';
+        $noExistPath2 = 'noexist2';
+        $this->filesystem->exists($noExistPath1)->willReturn(false);
+        $this->filesystem->exists($noExistPath2)->willReturn(false);
         $compiler = $this->createCompiler(
-            $this->workspace->path('noexist1'),
-            $this->workspace->path('noexist2')
+            $noExistPath1,
+            $noExistPath2
         );
         $histories = $compiler->compile();
         $this->assertCount(0, $histories);
@@ -49,6 +44,8 @@ class HistoryCompilerTest extends TestCase
 
     public function testNoChangeWithOneLock()
     {
+        $noExist = 'noexist2';
+        $this->filesystem->exists($noExist)->willReturn(false);
         $compiler = $this->createCompiler($this->createLock('composer_lock', [
                 'packages' => [
                     [
@@ -60,7 +57,7 @@ class HistoryCompilerTest extends TestCase
                         ],
                     ]
                 ],
-        ]), $this->workspace->path('noexist2'));
+        ]), $noExist);
         $histories = $compiler->compile();
         $this->assertCount(0, $histories);
     }
@@ -230,14 +227,13 @@ class HistoryCompilerTest extends TestCase
 
     private function createCompiler(string $composerLock, string $composerLockOld): HistoryCompiler
     {
-        return new HistoryCompiler($this->filesystem, $composerLock, $composerLockOld, $this->filter->reveal());
+        return new HistoryCompiler($this->filesystem->reveal(), $composerLock, $composerLockOld, $this->filter->reveal());
     }
 
     private function createLock(string $path, array $lock): string
     {
-        $path = $this->workspace->path($path);
-
-        file_put_contents($path, json_encode(array_replace_recursive([
+        $this->filesystem->exists($path)->willReturn(true);
+        $this->filesystem->getContents($path)->willReturn(json_encode(array_replace_recursive([
             'packages' => [],
         ], $lock)));
 
