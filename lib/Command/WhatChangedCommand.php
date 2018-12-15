@@ -13,6 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 class WhatChangedCommand extends BaseCommand
 {
     private const OPTION_MERGE_COMMITS = 'merge-commits';
+    const OPTION_FULL_MESSAGE = 'full-message';
+
 
     /**
      * @var WhatChangedContainerFactory
@@ -31,13 +33,26 @@ class WhatChangedCommand extends BaseCommand
         $this->setName('what-changed');
         $this->setDescription('Show what changed since your last update');
         $this->addOption(self::OPTION_MERGE_COMMITS, null, InputOption::VALUE_NONE, 'Show merge commits');
+        $this->addOption(self::OPTION_FULL_MESSAGE, 'F', InputOption::VALUE_NONE, 'Show full commit message');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $options = new ReportOptions();
+
+        $this->configureOptions($options, $input);
+        $this->containerFactory->create([])->consoleReport()->render(
+            new ConsoleReportOutput($output),
+            $options
+        );
+    }
+
+    private function configureOptions(ReportOptions $options, InputInterface $input)
+    {
         $options->showMergeCommits = $input->getOption(self::OPTION_MERGE_COMMITS);
 
-        $this->containerFactory->create([])->consoleReport()->render(new ConsoleReportOutput($output), $options);
+        if ($input->hasOption(self::OPTION_FULL_MESSAGE)) {
+            $options->shortMessage = !$input->getOption(self::OPTION_FULL_MESSAGE);
+        }
     }
 }

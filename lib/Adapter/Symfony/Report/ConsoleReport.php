@@ -9,6 +9,8 @@ use DTL\WhatChanged\Model\PackageHistory;
 use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Model\ReportOutput;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
 
@@ -29,12 +31,18 @@ class ConsoleReport implements Report
      */
     private $histories;
 
+    /**
+     * @var OutputFormatter
+     */
+    private $formatter;
+
     public function __construct(
         PackageHistories $histories,
         ChangelogFactory $factory
     ) {
         $this->factory = $factory;
         $this->histories = $histories;
+        $this->formatter = new OutputFormatter();
     }
 
     public function render(
@@ -157,33 +165,26 @@ class ConsoleReport implements Report
     {
         $parts = [];
         $parts[] = '   ';
-        $realLength = 4;
 
         if ($options->showCommitDates) {
             $date = $change->date()->format('Y-m-d H:i:s');
             $parts[] = sprintf('[<comment>%s</>]', $date);
-            $realLength += mb_strlen($date);
         }
 
         if ($options->showCommitSha) {
             $parts[] = sprintf('<info>%s</>', substr($change->sha(), 0, 8));
-            $realLength += 8;
         }
 
         if ($options->showAuthor) {
             $parts[] = sprintf('<comment>%s</comment>', $change->author());
-            $realLength += mb_strlen($change->author());
         }
 
         if ($options->shortMessage) {
             $message = $this->sanitizeOneLineMessage($change->message());
             $parts[] = $message;
-            $realLength += mb_strlen($message);
         }
 
-        $realLength += count($parts);
-
-        return $this->truncateToTerminalWidth(implode(' ', $parts), $realLength);
+        return $this->truncateToTerminalWidth(implode(' ', $parts));
     }
 
     private function indent(string $string, int $int)
@@ -200,10 +201,10 @@ class ConsoleReport implements Report
         return str_replace(["\n", "\r\n", "\r"], ' ', $string);
     }
 
-    private function truncateToTerminalWidth(string $line, int $realLength)
+    private function truncateToTerminalWidth(string $line)
     {
         $width = $this->terminalWidth();
-        $realLength -= 29;
+        $realLength = FormatterHelper::strlenWithoutDecoration($this->formatter, $line);
 
         if ($realLength > $width) {
             return mb_substr(
