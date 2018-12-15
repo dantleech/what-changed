@@ -62,7 +62,7 @@ class ChangeBuilder
         return $this;
     }
 
-    public function author(string $author)
+    public function author(string $author): self
     {
         $this->author = $author;
         return $this;

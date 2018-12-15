@@ -2,7 +2,7 @@
 
 namespace DTL\WhatChanged\Model;
 
-use RuntimeException;
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 
 class HistoryCompiler
 {
@@ -69,7 +69,7 @@ class HistoryCompiler
         $decoded = json_decode($contents, true);
 
         if (null === $decoded) {
-            throw new RuntimeException(sprintf(
+            throw new WhatChangedRuntimeException(sprintf(
                 'Could not decode JSON file "%s": %s',
                 $path,
                 json_last_error_msg()

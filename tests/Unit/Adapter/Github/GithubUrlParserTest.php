@@ -3,8 +3,8 @@
 namespace DTL\WhatChanged\Tests\Unit\Adapter\Github;
 
 use DTL\WhatChanged\Adapter\Github\GithubUrlParser;
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 class GithubUrlParserTest extends TestCase
 {
@@ -39,7 +39,7 @@ class GithubUrlParserTest extends TestCase
 
     public function testThrowsExceptionIfCannotParse()
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(WhatChangedRuntimeException::class);
         $this->parser->parse('abcd');
     }
 }

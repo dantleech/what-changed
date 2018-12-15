@@ -2,10 +2,10 @@
 
 namespace DTL\WhatChanged\Adapter\Github;
 
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\ChangeBuilder;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\PackageHistory;
-use RuntimeException;
 
 class GithubChangelog implements Changelog
 {
@@ -46,7 +46,7 @@ class GithubChangelog implements Changelog
         $response = $this->client->request($url);
 
         if (!isset($response['commits'])) {
-            throw new RuntimeException(sprintf(
+            throw new WhatChangedRuntimeException(sprintf(
                 'Unexpected response from Github: "%s"',
                 json_encode($response, JSON_PRETTY_PRINT)
             ));
