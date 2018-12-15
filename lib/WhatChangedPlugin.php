@@ -16,11 +16,6 @@ use DTL\WhatChanged\Model\ReportOptions;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
-    public function containerFactory(): WhatChangedContainerFactory
-    {
-        return new WhatChangedContainerFactory([]);
-    }
-
     /**
      * {@inheritDoc}
      */
@@ -39,7 +34,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
         ];
     }
 
-    public function handlePreUpdate(Event $event)
+    public function handlePreUpdate(Event $event): void
     {
         $this->containerFactory()->create()->archiver()->archive();
     }
@@ -69,5 +64,10 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
                 $this->containerFactory()
             ),
         ];
+    }
+
+    private function containerFactory(): WhatChangedContainerFactory
+    {
+        return new WhatChangedContainerFactory([]);
     }
 }

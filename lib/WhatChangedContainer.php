@@ -41,6 +41,7 @@ final class WhatChangedContainer
     public function histories(): PackageHistories
     {
         return (new HistoryCompiler(
+            $this->filesystem(),
             $this->lockFilePath,
             $this->compareLockFilePath,
             $this->filter()
