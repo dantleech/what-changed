@@ -35,6 +35,7 @@ class ConsoleReportTest extends TestCase
     {
         $this->factory = $this->prophesize(ChangelogFactory::class);
         $this->output = new BufferedReportOutput();
+        putenv('COLUMNS=100');
     }
 
     public function testRendersChangedPackages()
