@@ -2,7 +2,6 @@
 
 namespace DTL\WhatChanged\Adapter\Github;
 
-use DTL\WhatChanged\Model\Change;
 use DTL\WhatChanged\Model\ChangeBuilder;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\PackageHistory;

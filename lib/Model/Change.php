@@ -37,8 +37,7 @@ class Change
         string $sha,
         array $parents,
         string $author
-    )
-    {
+    ) {
         $this->date = $date;
         $this->message = $message;
         $this->sha = $sha;
