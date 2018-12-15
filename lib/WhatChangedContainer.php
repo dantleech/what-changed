@@ -5,6 +5,7 @@ namespace DTL\WhatChanged;
 use DTL\WhatChanged\Adapter\Github\GithubChangelogFactory;
 use DTL\WhatChanged\Model\ChangelogFactory;
 use DTL\WhatChanged\Model\ComposerLockArchiver;
+use DTL\WhatChanged\Model\Filesystem;
 use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use DTL\WhatChanged\Model\PackageHistories;
@@ -51,9 +52,18 @@ final class WhatChangedContainer
         return new GithubChangelogFactory($this->cachePath);
     }
 
+    public function filesystem(): Filesystem
+    {
+        return new Filesystem();
+    }
+
     public function archiver(): ComposerLockArchiver
     {
-        return new ComposerLockArchiver($this->lockFilePath, $this->compareLockFilePath);
+        return new ComposerLockArchiver(
+            $this->filesystem(),
+            $this->lockFilePath,
+            $this->compareLockFilePath
+        );
     }
 
     public function consoleReport(): ConsoleReport

@@ -18,9 +18,7 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
 {
     public function containerFactory(): WhatChangedContainerFactory
     {
-        return new WhatChangedContainerFactory([
-            'cwd' => getcwd()
-        ]);
+        return new WhatChangedContainerFactory([]);
     }
 
     /**

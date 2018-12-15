@@ -10,7 +10,6 @@ class WhatChangedContainerFactory
     const KEY_LOCK2 = 'compare_lock_path';
     const KEY_CACHE_PATH = 'cache_path';
 
-
     /**
      * @var array
      */

@@ -2,6 +2,7 @@
 
 namespace DTL\WhatChanged\Model;
 
+use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\Exception\CouldNotArchiveComposerLock;
 
 class ComposerLockArchiver
@@ -16,42 +17,36 @@ class ComposerLockArchiver
      */
     private $compareLockFilePath;
 
-    public function __construct(string $lockFilePath, string $compareLockFilePath)
+    /**
+     * @var Filesystem
+     */
+    private $filesystem;
+
+    public function __construct(Filesystem $filesystem, string $lockFilePath, string $compareLockFilePath)
     {
         $this->lockFilePath = $lockFilePath;
         $this->compareLockFilePath = $compareLockFilePath;
+        $this->filesystem = $filesystem;
     }
 
     public function archive(): void
     {
-        $lockFilePath = $this->resolveLockFilePath();
-
-        if (null === $lockFilePath) {
+        if (!$this->filesystem->exists($this->lockFilePath)) {
             return;
         }
 
-        if (!file_exists(dirname($this->compareLockFilePath))) {
-            mkdir(dirname($this->compareLockFilePath), 0777, true);
-        }
+        $e = null;
 
-        if (copy($lockFilePath, $this->compareLockFilePath)) {
+        try {
+            $this->filesystem->copy($this->lockFilePath, $this->compareLockFilePath);
             return;
+        } catch (WhatChangedRuntimeException $e) {
         }
 
         throw new CouldNotArchiveComposerLock(sprintf(
             'Could not archive composer lock file from "%s" to "%s"',
-            $lockFilePath,
+            $this->lockFilePath,
             $this->compareLockFilePath
-        ));
-    }
-
-    private function resolveLockFilePath(): ?string
-    {
-        $candidate = $this->lockFilePath . DIRECTORY_SEPARATOR . 'composer.lock';
-        if (file_exists($candidate)) {
-            return $candidate;
-        }
-
-        return null;
+        ), 0, $e);
     }
 }
