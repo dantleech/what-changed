@@ -18,6 +18,7 @@ the _commit messages_ for the differences between any upgraded packages.
 **Current limitations / features**:
 
 - Only packages hosted on Github are supported.
+- Authentication not supported (can exceed the github API limit).
 
 ```bash
 $ composer update
