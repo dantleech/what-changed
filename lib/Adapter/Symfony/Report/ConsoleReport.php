@@ -210,7 +210,7 @@ class ConsoleReport implements Report
             return mb_substr(
                 $line,
                 0,
-                mb_strlen($line) - ($realLength - $width) - 3
+                (int) (mb_strlen($line) - ($realLength - $width) - 3)
             ) . '...';
         }
 
