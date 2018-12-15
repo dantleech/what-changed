@@ -21,7 +21,8 @@
         "phpstan/phpstan": "^0.10.6",
         "friendsofphp/php-cs-fixer": "^2.13",
         "phpactor/test-utils": "^1.0",
-        "composer/composer": "^1.8"
+        "composer/composer": "^1.8",
+        "symfony/process": "^4.2"
     },
     "autoload": {
         "psr-4": {
