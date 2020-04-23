@@ -155,7 +155,7 @@ class ConsoleReport implements Report
     {
         if (class_exists(Terminal::class)) {
             $terminal = new Terminal();
-            return $terminal->getWidth() - 30;
+            return $terminal->getWidth();
         }
 
         return 80;
