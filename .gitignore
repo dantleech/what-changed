@@ -2,4 +2,5 @@
 /composer.lock
 /tests/Workspace
 /.php_cs.cache
+/example
 
