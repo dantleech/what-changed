@@ -45,6 +45,8 @@ class WhatChangedCommand extends BaseCommand
             new ConsoleReportOutput($output),
             $options
         );
+
+        return 0;
     }
 
     private function configureOptions(ReportOptions $options, InputInterface $input)
