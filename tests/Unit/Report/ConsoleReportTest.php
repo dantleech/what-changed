@@ -13,6 +13,8 @@ use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Adapter\Symfony\Report\ConsoleReport;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Console\Formatter\OutputFormatter;
+use Symfony\Component\Console\Helper\FormatterHelper;
 
 class ConsoleReportTest extends TestCase
 {
@@ -31,10 +33,16 @@ class ConsoleReportTest extends TestCase
      */
     private $factory;
 
+    /**
+     * @var OutputFormatter
+     */
+    private $formatter;
+
     public function setUp()
     {
         $this->factory = $this->prophesize(ChangelogFactory::class);
         $this->output = new BufferedReportOutput();
+        $this->formatter = new OutputFormatter();
         putenv('COLUMNS=100');
     }
 
@@ -53,6 +61,25 @@ class ConsoleReportTest extends TestCase
         $report->render($this->output, $options);
 
         $this->assertContains('Hello World', (string) $this->output);
+        $this->assertContains('Goodbye World', (string) $this->output);
+    }
+
+    public function testTruncationDoesNotIncludeTags()
+    {
+        $packageHistory = new PackageHistory('one', 'two', 'three');
+        $packageHistory->addReference('asd');
+        $packageHistory->addReference('dsa');
+
+        $report = $this->create([ $packageHistory ]);
+        $this->factory->changeLogFor($packageHistory)->willReturn($this->createChangelog([
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Hello World')->build(),
+            $this->changeBuilder()->rawDate('2018-01-01')->message('Goodbye World')->build(),
+        ]));
+        putenv('COLUMNS=25');
+        $options = new ReportOptions();
+        $report->render($this->output, $options);
+
+        $this->assertContains('Hello World', FormatterHelper::removeDecoration($this->formatter, $this->output->__toString()));
         $this->assertContains('Goodbye World', (string) $this->output);
     }
 
