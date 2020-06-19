@@ -50,7 +50,7 @@ class WhatChangedContainerFactory
             $config[self::KEY_CACHE_PATH],
             $config[self::KEY_GITHUB_OAUTH],
             $config[self::KEY_MAX_COMMITS],
-            $config[self::KEY_MAX_REPOS],
+            $config[self::KEY_MAX_REPOS]
         );
     }
 

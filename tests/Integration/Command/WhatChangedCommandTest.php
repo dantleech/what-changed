@@ -24,7 +24,7 @@ class WhatChangedCommandTest extends TestCase
     {
         $process = $this->runCommand(['--full-message']);
         $this->assertSuccess($process);
-        $this->assertContains('what the user has inputed', $process->getOutput());
+        $this->assertContains('only charset', $process->getOutput());
     }
 
     private function runCommand($args = []): Process
