@@ -12,6 +12,8 @@ $factory = new WhatChangedContainerFactory([
     'lock_path' => getcwd() . '/composer.lock',
     'compare_lock_path' => __DIR__ . '/../example/example.lock',
     'cache_path' => __DIR__ . '/../example/cache',
+    'max_commits' => 10,
+    'max_repos' => 10,
 ]);
 $container = $factory->create();
 

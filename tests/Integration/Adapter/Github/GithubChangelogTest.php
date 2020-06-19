@@ -20,7 +20,7 @@ class GithubChangelogTest extends TestCase
         $history->addReference('ccce1891f76c28faa4b0f10b67b5b7ed52eb91ad');
         $history->addReference('f5da23415533deed92fe3522da7099dccccf0ff0');
         $client = new CurlGithubClient();
-        $changelog = new GithubChangelog($history, $client);
+        $changelog = new GithubChangelog($history, $client, 5);
         $changes = iterator_to_array($changelog);
 
         $this->assertCount(5, $changes);

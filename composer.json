@@ -3,6 +3,8 @@
     "description": "Report changes in your dependencies",
     "license": "MIT",
     "type": "composer-plugin",
+    "minimum-stability":"dev",
+    "prefer-stable":true,
     "authors": [
         {
             "name": "Daniel Leech",
@@ -10,18 +12,18 @@
         }
     ],
     "require": {
-        "php": "^7.1",
+        "php": "^7.3",
 		"ext-curl": "*",
 		"ext-json": "*",
 		"ext-mbstring": "*",
-        "composer-plugin-api": "^1.1"
+        "composer-plugin-api": "^1.1|^2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.5",
-        "phpstan/phpstan": "^0.10.6",
-        "friendsofphp/php-cs-fixer": "^2.13",
+        "phpstan/phpstan": "^0.12",
         "phpactor/test-utils": "^1.0",
-        "composer/composer": "^1.8",
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "composer/composer": "^1.4|^2.0",
         "symfony/process": "^4.2"
     },
     "autoload": {
@@ -39,5 +41,12 @@
         "branch-alias": {
             "dev-master": "0.1.x-dev"
         }
+    },
+    "scripts": {
+        "integrate": [
+            "vendor/bin/php-cs-fixer fix",
+            "vendor/bin/phpstan analyse",
+            "vendor/bin/phpunit"
+        ]
     }
 }
