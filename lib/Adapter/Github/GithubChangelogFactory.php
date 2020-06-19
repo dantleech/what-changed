@@ -15,9 +15,15 @@ class GithubChangelogFactory implements ChangelogFactory
      */
     private $cachePath;
 
-    public function __construct(string $cachePath)
+    /**
+     * @var string|null
+     */
+    private $oauthToToken;
+
+    public function __construct(string $cachePath, ?string $oauthToToken = null)
     {
         $this->cachePath = $cachePath;
+        $this->oauthToToken = $oauthToToken;
     }
 
     public function changeLogFor(PackageHistory $history): Changelog
@@ -27,7 +33,7 @@ class GithubChangelogFactory implements ChangelogFactory
 
     private function createClient()
     {
-        $client = new CurlGithubClient();
+        $client = new CurlGithubClient($this->oauthToToken);
         $client = new CachedGithubClient($client, $this->cachePath);
 
         return $client;

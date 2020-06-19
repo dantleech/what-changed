@@ -3,6 +3,7 @@
 namespace DTL\WhatChanged;
 
 use Composer\Composer;
+use Composer\Config;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\IO\IOInterface;
 use Composer\Plugin\Capability\CommandProvider;
@@ -17,11 +18,19 @@ use DTL\WhatChanged\Model\ReportOptions;
 
 class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Capable, CommandProvider
 {
+    const COMPOSER_GITHUB_TOKEN = 'github-oauth';
+
+    /**
+     * @var Composer
+     */
+    private $composer;
+
     /**
      * {@inheritDoc}
      */
     public function activate(Composer $composer, IOInterface $io)
     {
+        $this->composer = $composer;
     }
 
     /**
@@ -47,7 +56,9 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     public function handlePostUpdate(Event $event)
     {
         try {
-            $this->containerFactory()->create()->consoleReport()->render(
+            $this->containerFactory([
+               WhatChangedContainerFactory::KEY_GITHUB_OAUTH  => $this->resolveGithubToken($event->getComposer()->getConfig())
+            ])->create()->consoleReport()->render(
                 new ComposerReportOutput($event->getIO()),
                 new ReportOptions()
             );
@@ -75,9 +86,9 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
         ];
     }
 
-    private function containerFactory(): WhatChangedContainerFactory
+    private function containerFactory(array $config = []): WhatChangedContainerFactory
     {
-        return new WhatChangedContainerFactory([]);
+        return new WhatChangedContainerFactory($config);
     }
 
     /**
@@ -90,7 +101,16 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     /**
      * {@inheritDoc}
      */
-    public function uninstall(Composer $composer, IOInterface $io)
+    public function uninstall(Composer$composer, IOInterface $io)
     {
+    }
+
+    private function resolveGithubToken(Config $config): ?string
+    {
+        if (!$config->has(self::COMPOSER_GITHUB_TOKEN)) {
+            return null;
+        }
+
+        return $this->composer->getConfig()->get(self::COMPOSER_GITHUB_TOKEN)['github.com'] ?? null;
     }
 }

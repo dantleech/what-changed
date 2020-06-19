@@ -9,6 +9,7 @@ class WhatChangedContainerFactory
     const KEY_LOCK1 = 'lock_path';
     const KEY_LOCK2 = 'compare_lock_path';
     const KEY_CACHE_PATH = 'cache_path';
+    const KEY_GITHUB_OAUTH = 'github.oauth_token';
 
     /**
      * @var array
@@ -26,6 +27,7 @@ class WhatChangedContainerFactory
             self::KEY_LOCK1 => getcwd() . '/composer.lock',
             self::KEY_LOCK2 => getcwd() . '/vendor/composer/what-changed/composer.lock.old',
             self::KEY_CACHE_PATH => getcwd() . '/vendor/composer/what-changed/cache',
+            self::KEY_GITHUB_OAUTH => null,
         ];
 
         $config = array_merge($defaults, $this->config, $config);
@@ -41,7 +43,8 @@ class WhatChangedContainerFactory
         return new WhatChangedContainer(
             $config[self::KEY_LOCK1],
             $config[self::KEY_LOCK2],
-            $config[self::KEY_CACHE_PATH]
+            $config[self::KEY_CACHE_PATH],
+            $config[self::KEY_GITHUB_OAUTH]
         );
     }
 

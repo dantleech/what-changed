@@ -28,14 +28,21 @@ final class WhatChangedContainer
      */
     private $cachePath;
 
+    /**
+     * @var string|null
+     */
+    private $githubOauthToken;
+
     public function __construct(
         string $lockFilePath,
         string $compareLockFilePath,
-        string $cachePath
+        string $cachePath,
+        ?string $githubOauthToken
     ) {
         $this->lockFilePath = $lockFilePath;
         $this->compareLockFilePath = $compareLockFilePath;
         $this->cachePath = $cachePath;
+        $this->githubOauthToken = $githubOauthToken;
     }
 
     public function histories(): PackageHistories
@@ -50,7 +57,7 @@ final class WhatChangedContainer
 
     public function changelogFactory(): ChangelogFactory
     {
-        return new GithubChangelogFactory($this->cachePath);
+        return new GithubChangelogFactory($this->cachePath, $this->githubOauthToken);
     }
 
     public function filesystem(): Filesystem
