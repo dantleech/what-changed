@@ -24,11 +24,17 @@ class GithubChangelog implements Changelog
      */
     private $client;
 
-    public function __construct(PackageHistory $history, GithubClient $client)
+    /**
+     * @var int|null
+     */
+    private $maxCommits;
+
+    public function __construct(PackageHistory $history, GithubClient $client, ?int $maxCommits = null)
     {
         $this->history = $history;
         $this->client = $client;
         $this->parser = new GithubUrlParser();
+        $this->maxCommits = $maxCommits;
     }
 
     public function getIterator()
@@ -52,7 +58,11 @@ class GithubChangelog implements Changelog
             ));
         }
 
+        $count = 0;
         foreach ($response['commits'] as $commit) {
+            if ($this->maxCommits && $count++ >=  $this->maxCommits) {
+                return;
+            }
             yield ChangeBuilder::create()
                 ->rawDate($commit['commit']['author']['date'])
                 ->message($commit['commit']['message'])

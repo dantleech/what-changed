@@ -33,16 +33,30 @@ final class WhatChangedContainer
      */
     private $githubOauthToken;
 
+    /**
+     * @var int|null
+     */
+    private $maxCommits;
+
+    /**
+     * @var int|null
+     */
+    private $maxRepos;
+
     public function __construct(
         string $lockFilePath,
         string $compareLockFilePath,
         string $cachePath,
-        ?string $githubOauthToken
+        ?string $githubOauthToken,
+        ?int $maxCommits,
+        ?int $maxRepos
     ) {
         $this->lockFilePath = $lockFilePath;
         $this->compareLockFilePath = $compareLockFilePath;
         $this->cachePath = $cachePath;
         $this->githubOauthToken = $githubOauthToken;
+        $this->maxCommits = $maxCommits;
+        $this->maxRepos = $maxRepos;
     }
 
     public function histories(): PackageHistories
@@ -57,7 +71,7 @@ final class WhatChangedContainer
 
     public function changelogFactory(): ChangelogFactory
     {
-        return new GithubChangelogFactory($this->cachePath, $this->githubOauthToken);
+        return new GithubChangelogFactory($this->cachePath, $this->githubOauthToken, $this->maxCommits);
     }
 
     public function filesystem(): Filesystem
@@ -78,7 +92,8 @@ final class WhatChangedContainer
     {
         return new ConsoleReport(
             $this->histories(),
-            $this->changelogFactory()
+            $this->changelogFactory(),
+            $this->maxRepos
         );
     }
 

@@ -111,6 +111,6 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
             return null;
         }
 
-        return $this->composer->getConfig()->get(self::COMPOSER_GITHUB_TOKEN)['github.com'] ?? null;
+        return $config->get(self::COMPOSER_GITHUB_TOKEN)['github.com'] ?? null;
     }
 }

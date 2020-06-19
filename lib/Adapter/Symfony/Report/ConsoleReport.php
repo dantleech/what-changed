@@ -36,13 +36,20 @@ class ConsoleReport implements Report
      */
     private $formatter;
 
+    /**
+     * @var int|null
+     */
+    private $maxRepos;
+
     public function __construct(
         PackageHistories $histories,
-        ChangelogFactory $factory
+        ChangelogFactory $factory,
+        ?int $maxRepos = null
     ) {
         $this->factory = $factory;
         $this->histories = $histories;
         $this->formatter = new OutputFormatter();
+        $this->maxRepos = $maxRepos;
     }
 
     public function render(
@@ -70,7 +77,7 @@ class ConsoleReport implements Report
         ));
 
         /** @var PackageHistory $history */
-        foreach ($changed->new() as $history) {
+        foreach ($changed->new() as $i => $history) {
             $output->writeln(sprintf(
                 '  - %s',
                 $history->name()
@@ -91,7 +98,7 @@ class ConsoleReport implements Report
         ));
 
         /** @var PackageHistory $history */
-        foreach ($changed->removed() as $history) {
+        foreach ($changed->removed() as $i => $history) {
             $output->writeln(sprintf(
                 '  - %s',
                 $history->name()
@@ -114,7 +121,11 @@ class ConsoleReport implements Report
         $output->writeln();
         
         /** @var PackageHistory $history */
-        foreach ($changed->updated() as $history) {
+        foreach ($changed->updated() as $i => $history) {
+            if (null !== $this->maxRepos && $i >= $this->maxRepos) {
+                break;
+            }
+
             $output->writeln(sprintf(
                 '  <info>%s</> %s..%s',
                 $history->name(),

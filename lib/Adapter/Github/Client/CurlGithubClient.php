@@ -8,11 +8,11 @@ use DTL\WhatChanged\Adapter\Github\GithubClient;
 class CurlGithubClient implements GithubClient
 {
     /**
-     * @var string
+     * @var string|null
      */
     private $oauthToken;
 
-    public function __construct(?string $oauthToken)
+    public function __construct(?string $oauthToken = null)
     {
         $this->oauthToken = $oauthToken;
     }

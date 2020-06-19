@@ -20,15 +20,21 @@ class GithubChangelogFactory implements ChangelogFactory
      */
     private $oauthToToken;
 
-    public function __construct(string $cachePath, ?string $oauthToToken = null)
+    /**
+     * @var int|null
+     */
+    private $maxCommits;
+
+    public function __construct(string $cachePath, ?string $oauthToToken = null, ?int $maxCommits = null)
     {
         $this->cachePath = $cachePath;
         $this->oauthToToken = $oauthToToken;
+        $this->maxCommits = $maxCommits;
     }
 
     public function changeLogFor(PackageHistory $history): Changelog
     {
-        return new GithubChangelog($history, $this->createClient());
+        return new GithubChangelog($history, $this->createClient(), $this->maxCommits);
     }
 
     private function createClient()

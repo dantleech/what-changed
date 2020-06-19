@@ -2,6 +2,8 @@
 
 namespace DTL\WhatChanged\Tests\Integration;
 
+use Composer\Composer;
+use Composer\Config;
 use Composer\IO\BufferIO;
 use Composer\Plugin\Capability\CommandProvider;
 use Composer\Script\Event;
@@ -30,6 +32,10 @@ class WhatChangedPluginTest extends TestCase
     {
         $this->plugin = new WhatChangedPlugin();
         $this->scriptEvent = $this->prophesize(Event::class);
+        $this->config = new Config();
+        $this->composer = $this->prophesize(Composer::class);
+        $this->scriptEvent->getComposer()->willReturn($this->composer);
+        $this->composer->getConfig()->willReturn($this->config);
         $this->io = new BufferIO();
         $this->scriptEvent->getIO()->willReturn($this->io);
     }
