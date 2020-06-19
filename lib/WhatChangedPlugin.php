@@ -79,4 +79,18 @@ class WhatChangedPlugin implements PluginInterface, EventSubscriberInterface, Ca
     {
         return new WhatChangedContainerFactory([]);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deactivate(Composer $composer, IOInterface $io)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function uninstall(Composer $composer, IOInterface $io)
+    {
+    }
 }
