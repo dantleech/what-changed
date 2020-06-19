@@ -18,7 +18,6 @@ the _commit messages_ for the differences between any upgraded packages.
 **Current limitations / features**:
 
 - Only packages hosted on Github are supported.
-- Authentication not supported (can exceed the github API limit).
 
 ```bash
 $ composer update
@@ -89,3 +88,10 @@ Options
 - `--full-message`: Show the full commit message
 - `--merge-commits`: Include merge commits
 
+
+Troubleshooting
+---------------
+
+- **Github API limit reached**: Configure the composer
+  [github-oauth](https://getcomposer.org/doc/06-config.md#gitlab-oauth) to
+  authenticate with Github.
