@@ -27,3 +27,10 @@ jobs:
         - composer install
       script:
         - composer integrate
+    - name: PHP Nightly
+      php: nightly
+      before_script:
+        - composer remove friendsofphp/php-cs-fixer --no-update --dev
+        - composer require composer/composer "^2.0"
+      script:
+        - ./vendor/bin/phpunit
