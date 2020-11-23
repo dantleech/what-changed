@@ -39,7 +39,7 @@
     "extra": {
         "class": "DTL\\WhatChanged\\WhatChangedPlugin",
         "branch-alias": {
-            "dev-master": "0.1.x-dev"
+            "dev-master": "0.5.x-dev"
         }
     },
     "scripts": {
