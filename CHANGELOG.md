@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.4.1] - 2020-11-22
 
-- Use `author['login']` in preference to `comitter['login]` (as github
+- Use `author['login']` in preference to `comitter['login']` (as github
   started using `web-flow` as the comitter user)
 
 ## [0.3.0] - 2020-06-20
