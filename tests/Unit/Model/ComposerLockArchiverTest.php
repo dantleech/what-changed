@@ -7,10 +7,12 @@ use DTL\WhatChanged\Model\ComposerLockArchiver;
 use DTL\WhatChanged\Model\Exception\CouldNotArchiveComposerLock;
 use DTL\WhatChanged\Model\Filesystem;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class ComposerLockArchiverTest extends TestCase
 {
+    use ProphecyTrait;
     const EXAMPLE_LOCK = 'lock_path.lock';
     const EXAMPLE_COMPARE = 'compare_path.lock';
 
@@ -25,7 +27,7 @@ class ComposerLockArchiverTest extends TestCase
      */
     private $archiver;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filesystem = $this->prophesize(Filesystem::class);
         $this->archiver = new ComposerLockArchiver(

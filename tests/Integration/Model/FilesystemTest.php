@@ -19,7 +19,7 @@ class FilesystemTest extends TestCase
      */
     private $workspace;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filesystsem = new Filesystem();
         $this->workspace = Workspace::create(__DIR__ . '/../../Workspace');

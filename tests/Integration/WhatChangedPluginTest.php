@@ -10,9 +10,11 @@ use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
 use DTL\WhatChanged\WhatChangedPlugin;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class WhatChangedPluginTest extends TestCase
 {
+    use ProphecyTrait;
     /**
      * @var WhatChangedPlugin
      */
@@ -28,7 +30,7 @@ class WhatChangedPluginTest extends TestCase
      */
     private $io;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->plugin = new WhatChangedPlugin();
         $this->scriptEvent = $this->prophesize(Event::class);

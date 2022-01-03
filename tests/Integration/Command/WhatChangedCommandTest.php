@@ -17,14 +17,14 @@ class WhatChangedCommandTest extends TestCase
     {
         $process = $this->runCommand(['--merge-commits']);
         $this->assertSuccess($process);
-        $this->assertContains('Merge', $process->getOutput());
+        $this->assertStringContainsString('Merge', $process->getOutput());
     }
 
     public function testWithFullMessage()
     {
         $process = $this->runCommand(['--full-message']);
         $this->assertSuccess($process);
-        $this->assertContains('only charset', $process->getOutput());
+        $this->assertStringContainsString('only charset', $process->getOutput());
     }
 
     private function runCommand($args = []): Process

@@ -6,6 +6,7 @@ use ArrayIterator;
 use Countable;
 use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use IteratorAggregate;
+use Traversable;
 
 class PackageHistories implements IteratorAggregate, Countable
 {
@@ -38,7 +39,7 @@ class PackageHistories implements IteratorAggregate, Countable
     /**
      * {@inheritDoc}
      */
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         return new ArrayIterator($this->histories);
     }
@@ -74,7 +75,7 @@ class PackageHistories implements IteratorAggregate, Countable
     /**
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->histories);
     }
