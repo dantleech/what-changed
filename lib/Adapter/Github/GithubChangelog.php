@@ -6,6 +6,7 @@ use DTL\WhatChanged\Exception\WhatChangedRuntimeException;
 use DTL\WhatChanged\Model\ChangeBuilder;
 use DTL\WhatChanged\Model\Changelog;
 use DTL\WhatChanged\Model\PackageHistory;
+use Traversable;
 
 class GithubChangelog implements Changelog
 {
@@ -37,7 +38,7 @@ class GithubChangelog implements Changelog
         $this->maxCommits = $maxCommits;
     }
 
-    public function getIterator()
+    public function getIterator(): Traversable
     {
         [$org, $repo] = $this->parser->parse($this->history->url());
 

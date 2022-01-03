@@ -95,7 +95,7 @@ class PackageHistory implements Countable
     /**
      * {@inheritDoc}
      */
-    public function count()
+    public function count(): int
     {
         return count($this->ordered);
     }
