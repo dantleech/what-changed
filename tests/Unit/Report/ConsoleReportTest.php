@@ -13,9 +13,11 @@ use DTL\WhatChanged\Model\Report;
 use DTL\WhatChanged\Model\ReportOptions;
 use DTL\WhatChanged\Adapter\Symfony\Report\ConsoleReport;
 use PHPUnit\Framework\TestCase;
+use Prophecy\PhpUnit\ProphecyTrait;
 
 class ConsoleReportTest extends TestCase
 {
+    use ProphecyTrait;
     /**
      * @var ConsoleReport
      */
@@ -31,7 +33,7 @@ class ConsoleReportTest extends TestCase
      */
     private $factory;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->factory = $this->prophesize(ChangelogFactory::class);
         $this->output = new BufferedReportOutput();
@@ -52,8 +54,8 @@ class ConsoleReportTest extends TestCase
         $options = new ReportOptions();
         $report->render($this->output, $options);
 
-        $this->assertContains('Hello World', (string) $this->output);
-        $this->assertContains('Goodbye World', (string) $this->output);
+        $this->assertStringContainsString('Hello World', (string) $this->output);
+        $this->assertStringContainsString('Goodbye World', (string) $this->output);
     }
 
     public function testIgnoresMergeCommits()
@@ -71,8 +73,8 @@ class ConsoleReportTest extends TestCase
         $options = new ReportOptions();
         $report->render($this->output, $options);
 
-        $this->assertNotContains('Hello World', (string) $this->output);
-        $this->assertContains('Goodbye World', (string) $this->output);
+        $this->assertStringNotContainsString('Hello World', (string) $this->output);
+        $this->assertStringContainsString('Goodbye World', (string) $this->output);
     }
 
     public function testShowsMergeCommits()
@@ -91,8 +93,8 @@ class ConsoleReportTest extends TestCase
         $options->showMergeCommits = true;
         $report->render($this->output, $options);
 
-        $this->assertContains('Hello World', (string) $this->output);
-        $this->assertContains('Goodbye World', (string) $this->output);
+        $this->assertStringContainsString('Hello World', (string) $this->output);
+        $this->assertStringContainsString('Goodbye World', (string) $this->output);
     }
 
     private function create(array $histories): Report

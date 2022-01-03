@@ -7,10 +7,12 @@ use DTL\WhatChanged\Model\Filter;
 use DTL\WhatChanged\Model\HistoryCompiler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
+use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 
 class HistoryCompilerTest extends TestCase
 {
+    use ProphecyTrait;
     /**
      * @var ObjectProphecy&Filter
      */
@@ -21,7 +23,7 @@ class HistoryCompilerTest extends TestCase
      */
     private $filesystem;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filesystem = $this->prophesize(Filesystem::class);
         $this->filter = $this->prophesize(Filter::class);
