@@ -215,7 +215,7 @@ class ConsoleReport implements Report
     private function truncateToTerminalWidth(string $line)
     {
         $width = $this->terminalWidth();
-        $realLength = FormatterHelper::strlenWithoutDecoration($this->formatter, $line);
+        $realLength = FormatterHelper::width(FormatterHelper::removeDecoration($this->formatter, $line));
 
         if ($realLength > $width) {
             return mb_substr(
