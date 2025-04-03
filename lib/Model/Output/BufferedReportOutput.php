@@ -13,7 +13,7 @@ class BufferedReportOutput implements ReportOutput
         $this->buffer .= $output;
     }
 
-    public function writeln(string $output = null)
+    public function writeln(?string $output = null)
     {
         $this->write($output . PHP_EOL);
     }

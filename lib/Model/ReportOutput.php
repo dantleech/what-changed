@@ -5,5 +5,5 @@ namespace DTL\WhatChanged\Model;
 interface ReportOutput
 {
     public function write(string $output);
-    public function writeln(string $output = null);
+    public function writeln(?string $output = null);
 }
