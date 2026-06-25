@@ -29,6 +29,13 @@ class GithubUrlParserTest extends TestCase
     public function provideParse()
     {
         yield [
+            'https://github.com/JetBrains/phpstorm-stubs',
+            [
+                'JetBrains',
+                'phpstorm-stubs',
+            ]
+        ];
+        yield [
             'https://github.com/phpactor/phpactor.git',
             [
                 'phpactor',

@@ -8,7 +8,7 @@ class GithubUrlParser
 {
     public function parse(string $url)
     {
-        if (!preg_match('{github.com/(.*?)/(.+?)\.}', $url, $matches)) {
+        if (!preg_match('{github.com/([^/]+)/([^\.]+)\.?}', $url, $matches)) {
             throw new WhatChangedRuntimeException(sprintf(
                 'Could not parse Github URL "%s"',
                 $url
